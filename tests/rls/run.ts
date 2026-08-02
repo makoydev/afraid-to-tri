@@ -16,6 +16,9 @@ import { Client } from 'pg';
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
+/** Port the Supabase CLI exposes its local Postgres on. */
+const SUPABASE_LOCAL_STACK_PORT = '54322';
+
 const MIGRATIONS_DIR = join(process.cwd(), 'supabase', 'migrations');
 const BOOTSTRAP = join(process.cwd(), 'tests', 'rls', 'bootstrap.sql');
 
@@ -108,6 +111,19 @@ function assertDatabaseIsDisposable(connectionString: string): void {
     host = new URL(connectionString).hostname;
   } catch {
     throw new Error(`DATABASE_URL is not a valid connection string: ${connectionString}`);
+  }
+
+  // The local Supabase stack is local, but it is NOT disposable in the way this
+  // suite needs: dropping the `auth` schema would destroy its GoTrue install and
+  // require a full `supabase stop && supabase start` to recover. Use a plain
+  // throwaway Postgres instead — `pnpm test:rls:local` starts one.
+  const port = new URL(connectionString).port;
+  if (port === SUPABASE_LOCAL_STACK_PORT) {
+    throw new Error(
+      `Refusing to run against the local Supabase stack (port ${SUPABASE_LOCAL_STACK_PORT}).\n\n` +
+        'This suite drops the auth schema, which would break GoTrue.\n' +
+        'Run `pnpm test:rls:local` to use a disposable Postgres container instead.',
+    );
   }
 
   const localHosts = new Set(['localhost', '127.0.0.1', '::1', 'postgres', 'db']);

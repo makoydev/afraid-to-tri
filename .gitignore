@@ -15,9 +15,9 @@ playwright-report/
 test-results/
 .lighthouseci/
 
-# env
+# env — everything except the committed template
 .env
-.env*.local
+.env.*
 !.env.example
 
 # supabase

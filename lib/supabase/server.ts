@@ -39,25 +39,29 @@ export async function createClient() {
    * Remove this once the deprecated overload is dropped upstream.
    */
   // eslint-disable-next-line @typescript-eslint/no-deprecated
-  return createServerClient(env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, {
-    cookies: {
-      getAll() {
-        return cookieStore.getAll();
-      },
-      setAll(cookiesToSet: SupabaseCookie[]) {
-        try {
-          for (const { name, value, options } of cookiesToSet) {
-            // @supabase/ssr and Next describe cookie options with compatible
-            // but not identical types (`sameSite` accepts a boolean in one).
-            // This is the single boundary cast; both sides stay typed.
-            const init: NextCookieInit = { name, value, ...(options as object) };
-            cookieStore.set(init);
+  return createServerClient(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet: SupabaseCookie[]) {
+          try {
+            for (const { name, value, options } of cookiesToSet) {
+              // @supabase/ssr and Next describe cookie options with compatible
+              // but not identical types (`sameSite` accepts a boolean in one).
+              // This is the single boundary cast; both sides stay typed.
+              const init: NextCookieInit = { name, value, ...(options as object) };
+              cookieStore.set(init);
+            }
+          } catch {
+            // Server Components cannot set cookies. Middleware refreshes the
+            // session instead, so this is safe to ignore here.
           }
-        } catch {
-          // Server Components cannot set cookies. Middleware refreshes the
-          // session instead, so this is safe to ignore here.
-        }
+        },
       },
     },
-  });
+  );
 }
