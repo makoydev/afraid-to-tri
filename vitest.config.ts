@@ -17,7 +17,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: ['lib/**/*.ts', 'components/**/*.tsx'],
-      exclude: ['**/*.test.*', '**/index.ts', 'lib/supabase/**'],
+      exclude: ['**/*.test.*', '**/index.ts', 'lib/supabase/**', 'lib/training/testing/**'],
       // The domain layer is the product. It carries a hard threshold;
       // everything else is measured but not gated. See docs/adr/0006.
       thresholds: {
