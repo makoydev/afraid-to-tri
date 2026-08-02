@@ -14,7 +14,7 @@ Useful commands:
 pnpm verify     # format + typecheck + lint + unit tests — run before every commit.
                 # Deliberately mirrors CI, so local green means CI green.
 pnpm test:cov   # unit tests with the lib/training coverage thresholds enforced
-pnpm test:rls   # data-isolation suite; needs DATABASE_URL pointing at a throwaway Postgres 16+
+pnpm test:rls:local  # data-isolation suite in a disposable Postgres container (needs Docker)
 pnpm build && node scripts/check-bundle-budget.mjs   # performance budget
 ```
 
@@ -47,12 +47,12 @@ User-facing strings go through `lib/format/` and are externalized. Before writin
 
 ## Testing
 
-| Suite  | Command           | Gate                                                                                                 |
-| ------ | ----------------- | ---------------------------------------------------------------------------------------------------- |
-| Unit   | `pnpm test`       | All of `lib/training/` covered, including property tests                                             |
-| RLS    | `pnpm test:rls`   | Runs against an ephemeral database in CI                                                             |
-| E2E    | `pnpm test:e2e`   | Must include the offline log-and-sync scenario                                                       |
-| Budget | `pnpm lighthouse` | Fails the PR if the perf budget in [docs/05](docs/05-architecture.md#performance-budget) is exceeded |
+| Suite  | Command               | Gate                                                                                                 |
+| ------ | --------------------- | ---------------------------------------------------------------------------------------------------- |
+| Unit   | `pnpm test`           | All of `lib/training/` covered, including property tests                                             |
+| RLS    | `pnpm test:rls:local` | Disposable Postgres container; same suite runs in CI                                                 |
+| E2E    | `pnpm test:e2e`       | Must include the offline log-and-sync scenario                                                       |
+| Budget | `pnpm lighthouse`     | Fails the PR if the perf budget in [docs/05](docs/05-architecture.md#performance-budget) is exceeded |
 
 New training logic without unit tests doesn't merge. Everything else is negotiable.
 
