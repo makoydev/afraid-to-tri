@@ -24,7 +24,7 @@
     "test:rls:local": "bash scripts/test-rls-local.sh",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test"
+    "verify": "pnpm format:check && pnpm typecheck && pnpm lint && pnpm test"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",

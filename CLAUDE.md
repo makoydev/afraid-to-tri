@@ -11,7 +11,8 @@ Built and tested: the training domain (`lib/training/`), the database schema and
 Useful commands:
 
 ```bash
-pnpm verify     # typecheck + lint + unit tests — run this before every commit
+pnpm verify     # format + typecheck + lint + unit tests — run before every commit.
+                # Deliberately mirrors CI, so local green means CI green.
 pnpm test:cov   # unit tests with the lib/training coverage thresholds enforced
 pnpm test:rls   # data-isolation suite; needs DATABASE_URL pointing at a throwaway Postgres 16+
 pnpm build && node scripts/check-bundle-budget.mjs   # performance budget
