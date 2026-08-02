@@ -1,0 +1,193 @@
+@import 'tailwindcss';
+
+/* ============================================================================
+   Design tokens — the single source of truth is docs/06-design-system.md.
+   Values here must match that document; changing one without the other is a bug.
+
+   Dark values are declared under BOTH the media query (OS preference) and the
+   [data-theme] scopes (in-app toggle) so the toggle wins in either direction.
+   ========================================================================== */
+
+@theme {
+  /* -- surfaces & ink ----------------------------------------------------- */
+  --color-plane: #f9f9f7;
+  --color-surface: #fcfcfb;
+  --color-raised: #ffffff;
+  --color-ink: #0b0b0b;
+  --color-ink-2: #52514e;
+  --color-ink-muted: #898781;
+  --color-hairline: #e1e0d9;
+
+  /* -- brand -------------------------------------------------------------- */
+  --color-primary: #4a3aa7;
+  --color-primary-on: #ffffff;
+  --color-primary-wash: #eeecfa;
+
+  /* -- discipline identity ------------------------------------------------ */
+  --color-swim: #2a78d6;
+  --color-bike: #eb6834;
+  --color-run: #1baf7a;
+  --color-other: #898781;
+
+  /* -- intensity zones (ordinal ramp, single hue) ------------------------- */
+  --color-zone-1: #86b6ef;
+  --color-zone-2: #5598e7;
+  --color-zone-3: #2a78d6;
+  --color-zone-4: #1c5cab;
+  --color-zone-5: #104281;
+  --color-zone-ink: #ffffff;
+
+  /* -- status (fixed, never themed) --------------------------------------- */
+  --color-good: #0ca30c;
+  --color-warning: #fab219;
+  --color-serious: #ec835a;
+  --color-critical: #d03b3b;
+
+  /* -- type scale --------------------------------------------------------- */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --text-display: 48px;
+  --text-display--line-height: 52px;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.02em;
+
+  --text-title-lg: 28px;
+  --text-title-lg--line-height: 34px;
+  --text-title-lg--font-weight: 700;
+  --text-title-lg--letter-spacing: -0.015em;
+
+  --text-title: 22px;
+  --text-title--line-height: 28px;
+  --text-title--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 26px;
+
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+
+  --text-label: 14px;
+  --text-label--line-height: 20px;
+  --text-label--font-weight: 500;
+
+  /* Floor — nothing smaller than this ships. */
+  --text-caption: 13px;
+  --text-caption--line-height: 18px;
+  --text-caption--font-weight: 500;
+
+  /* -- radius ------------------------------------------------------------- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* -- elevation (two levels only) ---------------------------------------- */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.04);
+  --shadow-sheet: 0 -4px 24px rgb(0 0 0 / 0.12);
+
+  /* -- touch targets ------------------------------------------------------ */
+  --spacing-touch: 44px;
+  --spacing-touch-primary: 56px;
+  --spacing-touch-live: 64px;
+}
+
+/* Dark theme — selected, never a naive inversion. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme='light'])) {
+    color-scheme: dark;
+    --color-plane: #0d0d0d;
+    --color-surface: #1a1a19;
+    --color-raised: #232322;
+    --color-ink: #ffffff;
+    --color-ink-2: #c3c2b7;
+    --color-ink-muted: #898781;
+    --color-hairline: #2c2c2a;
+
+    --color-primary: #9085e9;
+    --color-primary-on: #12121a;
+    --color-primary-wash: #241f42;
+
+    --color-swim: #3987e5;
+    --color-bike: #d95926;
+    --color-run: #199e70;
+
+    --color-zone-1: #184f95;
+    --color-zone-2: #256abf;
+    --color-zone-3: #3987e5;
+    --color-zone-4: #6da7ec;
+    --color-zone-5: #9ec5f4;
+    --color-zone-ink: #0d0d0d;
+
+    --shadow-card: none;
+    --shadow-sheet: 0 -4px 24px rgb(0 0 0 / 0.5);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-plane: #0d0d0d;
+  --color-surface: #1a1a19;
+  --color-raised: #232322;
+  --color-ink: #ffffff;
+  --color-ink-2: #c3c2b7;
+  --color-ink-muted: #898781;
+  --color-hairline: #2c2c2a;
+
+  --color-primary: #9085e9;
+  --color-primary-on: #12121a;
+  --color-primary-wash: #241f42;
+
+  --color-swim: #3987e5;
+  --color-bike: #d95926;
+  --color-run: #199e70;
+
+  --color-zone-1: #184f95;
+  --color-zone-2: #256abf;
+  --color-zone-3: #3987e5;
+  --color-zone-4: #6da7ec;
+  --color-zone-5: #9ec5f4;
+  --color-zone-ink: #0d0d0d;
+
+  --shadow-card: none;
+  --shadow-sheet: 0 -4px 24px rgb(0 0 0 / 0.5);
+}
+
+/* ============================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-plane);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Focus rings are never removed — see docs/06 § Accessibility. */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Digits that line up in columns get tabular figures. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
