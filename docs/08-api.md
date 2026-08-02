@@ -13,37 +13,37 @@ Most reads go **straight to Supabase** from Server Components and the client, pr
 ```ts
 type ApiError = {
   error: {
-    code: string;            // machine-readable, stable
-    message: string;         // human-readable, safe to show
-    details?: unknown;       // Zod issues, field errors
+    code: string; // machine-readable, stable
+    message: string; // human-readable, safe to show
+    details?: unknown; // Zod issues, field errors
     retryable: boolean;
   };
 };
 ```
 
-| Status | When |
-|---|---|
-| 400 | Validation failure |
-| 401 | No/invalid session |
-| 403 | RLS or scope denial |
-| 404 | Not found, or not visible to this user (indistinguishable, on purpose) |
-| 409 | Conflict (e.g. an active plan already exists) |
-| 422 | Semantically invalid — the big one is `PLAN_INFEASIBLE` |
-| 429 | Rate limited; `Retry-After` set |
-| 500 | Unhandled; logged with a request id returned to the client |
+| Status | When                                                                   |
+| ------ | ---------------------------------------------------------------------- |
+| 400    | Validation failure                                                     |
+| 401    | No/invalid session                                                     |
+| 403    | RLS or scope denial                                                    |
+| 404    | Not found, or not visible to this user (indistinguishable, on purpose) |
+| 409    | Conflict (e.g. an active plan already exists)                          |
+| 422    | Semantically invalid — the big one is `PLAN_INFEASIBLE`                |
+| 429    | Rate limited; `Retry-After` set                                        |
+| 500    | Unhandled; logged with a request id returned to the client             |
 
 ---
 
 ## Direct Supabase access (no route handler)
 
-| Operation | Access |
-|---|---|
-| Read today's session, week, calendar month | `select` on `sessions` |
-| Read plan and weeks | `select` on `plans`, `plan_weeks` |
-| Read metrics series | `select` on `daily_metrics` |
-| Read/update profile | `select`/`update` on `profiles` |
-| Checklist toggles | `update` on `checklists` |
-| Module progress | `upsert` on `module_progress` |
+| Operation                                  | Access                            |
+| ------------------------------------------ | --------------------------------- |
+| Read today's session, week, calendar month | `select` on `sessions`            |
+| Read plan and weeks                        | `select` on `plans`, `plan_weeks` |
+| Read metrics series                        | `select` on `daily_metrics`       |
+| Read/update profile                        | `select`/`update` on `profiles`   |
+| Checklist toggles                          | `update` on `checklists`          |
+| Module progress                            | `upsert` on `module_progress`     |
 
 These need no server round-trip and no bespoke code. RLS is the authorization layer.
 
@@ -240,24 +240,24 @@ Requires re-authentication. Revokes all integration tokens with their providers 
 
 Supabase Realtime channels, RLS-filtered:
 
-| Channel | Payload |
-|---|---|
-| `user:{id}:sessions` | Session updated (e.g. auto-completed by a Strava import while the app is open) |
-| `user:{id}:adjustments` | New plan adjustment |
-| `coach:{id}:roster` | Athlete logged a session |
-| `session:{id}:comments` | New comment |
+| Channel                 | Payload                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| `user:{id}:sessions`    | Session updated (e.g. auto-completed by a Strava import while the app is open) |
+| `user:{id}:adjustments` | New plan adjustment                                                            |
+| `coach:{id}:roster`     | Athlete logged a session                                                       |
+| `session:{id}:comments` | New comment                                                                    |
 
 ---
 
 ## Rate limits
 
-| Endpoint | Limit |
-|---|---|
-| `/api/plan/generate` | 10 / hour / user |
-| `/api/sessions/sync` | 60 / hour / user |
-| `/api/integrations/*/backfill` | 3 / day / user |
-| Webhooks | 1000 / min / provider (global) |
-| Auth | 5 / 15 min / IP |
+| Endpoint                       | Limit                          |
+| ------------------------------ | ------------------------------ |
+| `/api/plan/generate`           | 10 / hour / user               |
+| `/api/sessions/sync`           | 60 / hour / user               |
+| `/api/integrations/*/backfill` | 3 / day / user                 |
+| Webhooks                       | 1000 / min / provider (global) |
+| Auth                           | 5 / 15 min / IP                |
 
 ---
 

@@ -167,7 +167,10 @@ function blockPhases(totalWeeks: number, goal: Goal, tier: ExperienceTier): Plan
   if (goal.mode === 'fitness') {
     // A rolling block with no race to work back from: base, then build.
     const base = Math.max(1, Math.round(totalWeeks * 0.6));
-    return [...Array<PlanPhase>(base).fill('base'), ...Array<PlanPhase>(totalWeeks - base).fill('build')];
+    return [
+      ...Array<PlanPhase>(base).fill('base'),
+      ...Array<PlanPhase>(totalWeeks - base).fill('build'),
+    ];
   }
 
   const taper = minimumTaperWeeks(goal.distance);
@@ -439,8 +442,7 @@ function fitWeekToLoad(
 
     // Relax the length floor as attempts go on. A very short session is odd,
     // but it beats a week that breaks a ramp cap.
-    const floor =
-      attempt < 4 ? ABSOLUTE_MIN_SESSION_SEC : attempt < 8 ? 10 * 60 : 5 * 60;
+    const floor = attempt < 4 ? ABSOLUTE_MIN_SESSION_SEC : attempt < 8 ? 10 * 60 : 5 * 60;
 
     const scale = allowedLoad / load;
     const scaled = current.map((b) =>
@@ -517,8 +519,7 @@ export function buildPlan(input: GenerateInput): Plan | FeasibilityFailure {
   const hardBudget = finishOnly ? 0 : hardSessionsAllowed(profile.tier);
 
   const dailySeconds = profile.availability.minutesPerDay * 60;
-  const weeklyCeiling =
-    profile.availability.days.length * dailySeconds * AVAILABILITY_UTILISATION;
+  const weeklyCeiling = profile.availability.days.length * dailySeconds * AVAILABILITY_UTILISATION;
 
   const weeks: PlanWeek[] = [];
   const sessions: Session[] = [];
@@ -544,7 +545,10 @@ export function buildPlan(input: GenerateInput): Plan | FeasibilityFailure {
     const phase = phases[index] ?? 'base';
     const weekStart = addWeeks(startDate, index);
     const isRecovery =
-      phase !== 'taper' && index > 0 && (index + 1) % RECOVERY_CYCLE === 0 && index < totalWeeks - 1;
+      phase !== 'taper' &&
+      index > 0 &&
+      (index + 1) % RECOVERY_CYCLE === 0 &&
+      index < totalWeeks - 1;
 
     /* -- volume for the week ------------------------------------------- */
     // Time off detrains. Coming back from a blackout, resume lower rather than

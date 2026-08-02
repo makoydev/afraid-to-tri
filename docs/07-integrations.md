@@ -8,15 +8,15 @@ Goal: **the athlete never types in a workout they already recorded.** Everything
 
 ## Provider comparison
 
-| | Strava | Garmin Connect | Apple Health | Health Connect |
-|---|---|---|---|---|
-| Phase | 1 | 2 | 2 | 2 |
-| Approval needed | Self-serve | **Partner program approval** | — | — |
-| Web-accessible | ✅ | ✅ | ❌ native only | ❌ native only |
-| Push in (new activities) | Webhooks | Push service | Native observer | Native observer |
-| Push out (workouts to device) | ❌ | ✅ Training API | ✅ | Limited |
-| Wellness (sleep, HRV, RHR) | ❌ | ✅ | ✅ | ✅ |
-| Covers most users | ✅ (aggregator) | Garmin owners only | iPhone owners | Android |
+|                               | Strava          | Garmin Connect               | Apple Health    | Health Connect  |
+| ----------------------------- | --------------- | ---------------------------- | --------------- | --------------- |
+| Phase                         | 1               | 2                            | 2               | 2               |
+| Approval needed               | Self-serve      | **Partner program approval** | —               | —               |
+| Web-accessible                | ✅              | ✅                           | ❌ native only  | ❌ native only  |
+| Push in (new activities)      | Webhooks        | Push service                 | Native observer | Native observer |
+| Push out (workouts to device) | ❌              | ✅ Training API              | ✅              | Limited         |
+| Wellness (sleep, HRV, RHR)    | ❌              | ✅                           | ✅              | ✅              |
+| Covers most users             | ✅ (aggregator) | Garmin owners only           | iPhone owners   | Android         |
 
 **Strava first** because it aggregates almost every device — a Garmin, Wahoo, Coros, or Apple Watch user very likely already syncs to Strava. One integration covers the majority of the addressable users.
 
@@ -47,6 +47,7 @@ One subscription per application (not per user); Strava posts every athlete even
 - `POST /api/webhooks/strava` — event delivery: `{ object_type, object_id, aspect_type, owner_id, subscription_id, event_time, updates }`.
 
 **Handler rules**
+
 1. Verify `subscription_id`. Reject anything else.
 2. **Respond 200 within 2 seconds**, always. Enqueue the work; never process inline. Strava retries and then disables subscriptions that are slow or failing.
 3. Map `owner_id` → our user via `integrations.external_user_id`. Unknown owner → 200 and drop (they may have disconnected).
@@ -74,17 +75,17 @@ On first connect, import the last 30 days. Used to seed `daily_metrics` so the F
 
 ### Data mapping
 
-| Strava | Ours |
-|---|---|
-| `id` | `activities.external_id` |
-| `type` / `sport_type` | `discipline` (see table below) |
-| `start_date` | `started_at`; `start_date_local` → `local_date` |
-| `elapsed_time` / `moving_time` | `duration_sec` / `moving_sec` |
-| `distance` | `distance_m` |
-| `average_heartrate` / `max_heartrate` | `avg_hr` / `max_hr` |
-| `average_watts` / `weighted_average_watts` | `avg_power` / `weighted_power` |
-| `total_elevation_gain` | `elevation_m` |
-| whole payload | `raw` |
+| Strava                                     | Ours                                            |
+| ------------------------------------------ | ----------------------------------------------- |
+| `id`                                       | `activities.external_id`                        |
+| `type` / `sport_type`                      | `discipline` (see table below)                  |
+| `start_date`                               | `started_at`; `start_date_local` → `local_date` |
+| `elapsed_time` / `moving_time`             | `duration_sec` / `moving_sec`                   |
+| `distance`                                 | `distance_m`                                    |
+| `average_heartrate` / `max_heartrate`      | `avg_hr` / `max_hr`                             |
+| `average_watts` / `weighted_average_watts` | `avg_power` / `weighted_power`                  |
+| `total_elevation_gain`                     | `elevation_m`                                   |
+| whole payload                              | `raw`                                           |
 
 Sport-type mapping: `Swim` → swim · `Ride`/`VirtualRide`/`EBikeRide`/`GravelRide`/`MountainBikeRide` → bike · `Run`/`TrailRun`/`VirtualRun` → run · `WeightTraining`/`Workout`/`Crossfit` → strength · `Walk`/`Hike`/`Yoga` → imported but not matched to sessions. Anything unrecognized is imported as `other` and never auto-matched.
 
@@ -92,7 +93,7 @@ Sport-type mapping: `Swim` → swim · `Ride`/`VirtualRide`/`EBikeRide`/`GravelR
 
 ## Activity matching
 
-The logic that decides whether an incoming activity *is* the planned session. Deliberately conservative: a wrong auto-match is more annoying than a question.
+The logic that decides whether an incoming activity _is_ the planned session. Deliberately conservative: a wrong auto-match is more annoying than a question.
 
 ```ts
 function scoreMatch(activity: Activity, session: Session): number {
@@ -114,17 +115,18 @@ function scoreMatch(activity: Activity, session: Session): number {
     score += dRatio >= 0.7 && dRatio <= 1.4 ? 20 * (1 - Math.abs(1 - dRatio)) : 0;
   }
 
-  return score;   // 0–100
+  return score; // 0–100
 }
 ```
 
-| Score | Action |
-|---|---|
-| ≥ 75 | Auto-complete the session. Notify: "Your Tuesday ride is logged ✓" |
-| 45–74 | Ask: "Was this your Tuesday ride?" — one tap yes/no |
-| < 45 | Log as an extra session outside the plan; it still counts toward load |
+| Score | Action                                                                |
+| ----- | --------------------------------------------------------------------- |
+| ≥ 75  | Auto-complete the session. Notify: "Your Tuesday ride is logged ✓"    |
+| 45–74 | Ask: "Was this your Tuesday ride?" — one tap yes/no                   |
+| < 45  | Log as an extra session outside the plan; it still counts toward load |
 
 **Special cases**
+
 - **Bricks** arrive as two Strava activities (a ride and a run) close together. If both match a `brick` session's legs within 30 minutes of each other, match them as a pair.
 - **Multiple candidates** on the same day: pick the highest score, ask if the top two are within 10 points.
 - **One activity, two sessions** (a double day): an activity can only ever match one session.
@@ -132,7 +134,7 @@ function scoreMatch(activity: Activity, session: Session): number {
 
 ### Idempotency
 
-`unique (user_id, source, external_id)` on `activities` makes duplicate webhook delivery a no-op. Webhook handlers are written to be safely re-runnable — Strava *will* deliver the same event twice.
+`unique (user_id, source, external_id)` on `activities` makes duplicate webhook delivery a no-op. Webhook handlers are written to be safely re-runnable — Strava _will_ deliver the same event twice.
 
 ---
 
@@ -181,13 +183,13 @@ No good universal API exists for race calendars. Approach: a curated seed list o
 
 Integrations fail constantly in production. The rules:
 
-| Failure | Behaviour |
-|---|---|
-| Token expired | Refresh silently. If refresh fails, mark `status = 'expired'` and show a one-tap reconnect card on Today. |
-| Provider 5xx | Retry with backoff (3 attempts), then park the event in a dead-letter table for manual replay. |
-| Rate limited | Back off, queue, resume. Never drop the event. |
-| Webhook signature invalid | 200 (so the provider doesn't retry) + log + alert. Never process. |
-| User revoked at the provider | Detect via the revocation event or a failed refresh; mark revoked, stop syncing, keep imported data. |
-| Malformed payload | Store `raw`, mark the row `needs_review`, continue. Never crash the handler on one bad activity. |
+| Failure                      | Behaviour                                                                                                 |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Token expired                | Refresh silently. If refresh fails, mark `status = 'expired'` and show a one-tap reconnect card on Today. |
+| Provider 5xx                 | Retry with backoff (3 attempts), then park the event in a dead-letter table for manual replay.            |
+| Rate limited                 | Back off, queue, resume. Never drop the event.                                                            |
+| Webhook signature invalid    | 200 (so the provider doesn't retry) + log + alert. Never process.                                         |
+| User revoked at the provider | Detect via the revocation event or a failed refresh; mark revoked, stop syncing, keep imported data.      |
+| Malformed payload            | Store `raw`, mark the row `needs_review`, continue. Never crash the handler on one bad activity.          |
 
 **Invariant:** an integration failure must never break the core product. If Strava is down, the athlete can still see their plan, run a session, and log it by hand. Every integration is an accelerant, never a dependency.

@@ -129,7 +129,11 @@ describe('plannedLoad', () => {
   it('costs a flat session the same as sessionLoad would', () => {
     const steps = [{ label: 'Main', durationSec: 3600, zone: 2 as const, cue: 'Easy' }];
     expect(plannedLoad(steps, 'bike')).toBeCloseTo(
-      sessionLoad({ durationSec: 3600, intensityRatio: ZONE_INTENSITY_RATIO[2], discipline: 'bike' }),
+      sessionLoad({
+        durationSec: 3600,
+        intensityRatio: ZONE_INTENSITY_RATIO[2],
+        discipline: 'bike',
+      }),
       6,
     );
   });

@@ -266,7 +266,9 @@ async function main(): Promise<void> {
   record(
     'every public table has row level security enabled',
     unprotected.length === 0,
-    unprotected.length ? `missing on: ${unprotected.map((r) => r.tablename).join(', ')}` : undefined,
+    unprotected.length
+      ? `missing on: ${unprotected.map((r) => r.tablename).join(', ')}`
+      : undefined,
   );
 
   const { rows: policyless } = await admin.query<{ tablename: string }>(
@@ -280,7 +282,9 @@ async function main(): Promise<void> {
   record(
     'every protected table has at least one policy',
     policyless.length === 0,
-    policyless.length ? `no policies on: ${policyless.map((r) => r.tablename).join(', ')}` : undefined,
+    policyless.length
+      ? `no policies on: ${policyless.map((r) => r.tablename).join(', ')}`
+      : undefined,
   );
 
   await client.end();

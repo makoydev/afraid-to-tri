@@ -6,7 +6,7 @@ Postgres on Supabase. Every table is protected by Row Level Security; the app ne
 
 - `uuid` primary keys, `gen_random_uuid()` default.
 - `created_at` / `updated_at` `timestamptz` on every table, `updated_at` maintained by trigger.
-- Dates the athlete perceives as *days* (session dates, race dates) are `date`, not `timestamptz` — a session belongs to a calendar day in the athlete's local timezone, and storing an instant creates timezone bugs at exactly the wrong moment.
+- Dates the athlete perceives as _days_ (session dates, race dates) are `date`, not `timestamptz` — a session belongs to a calendar day in the athlete's local timezone, and storing an instant creates timezone bugs at exactly the wrong moment.
 - Durations in **seconds**, distances in **metres**, pace in **seconds per unit**. All conversion happens in the UI layer.
 - Enums are Postgres `enum` types where the set is closed and stable, `text` + check constraint where it may grow.
 - Soft delete only where the user might want undo (`deleted_at`); everything else is hard-deleted.
@@ -39,6 +39,7 @@ erDiagram
 ## Core tables
 
 ### `profiles`
+
 Extends `auth.users` 1:1.
 
 ```sql
@@ -153,6 +154,7 @@ create table plan_weeks (
 `generator_input` + `generator_version` make every plan reproducible — essential for debugging "why did it give me this?" and for regression-testing generator changes against real inputs.
 
 ### `sessions`
+
 The central table. A row exists for planned, completed, and ad-hoc sessions.
 
 ```sql
@@ -214,9 +216,11 @@ create unique index on sessions (user_id, client_id) where client_id is not null
 `client_id` is what makes offline logging safe: the client mints a UUID before the request, and a replayed mutation upserts rather than duplicating.
 
 ### `session_steps`
+
 Steps live in `sessions.steps` as `jsonb` for read performance (they're always fetched with their session and never queried across sessions). A normalized table is deliberately **not** used — see [ADR-0004](adr/0004-jsonb-for-session-steps.md).
 
 ### `activities`
+
 Raw imports from third parties, kept separate from `sessions` so re-matching is always possible and deleting a plan never destroys real training history.
 
 ```sql
@@ -247,6 +251,7 @@ create index on activities (user_id, local_date);
 ```
 
 ### `daily_metrics`
+
 One row per user per day — the load model's materialized output, plus optional wellness inputs.
 
 ```sql
@@ -289,6 +294,7 @@ create index on test_results (user_id, kind, date desc);
 ```
 
 ### `plan_adjustments`
+
 The audit trail behind "what changed and why", and the undo mechanism.
 
 ```sql
@@ -331,7 +337,7 @@ create table integrations (
 );
 ```
 
-**Tokens are never exposed to the client.** RLS grants users `select` on every column *except* the token columns via a restricted view (`integrations_public`); the raw table is readable only by the service role in server-side routes. Tokens are encrypted with `pgsodium` / Supabase Vault.
+**Tokens are never exposed to the client.** RLS grants users `select` on every column _except_ the token columns via a restricted view (`integrations_public`); the raw table is readable only by the service role in server-side routes. Tokens are encrypted with `pgsodium` / Supabase Vault.
 
 ### `race_results`
 
@@ -364,7 +370,8 @@ create table checklists (
 ```
 
 ### `content_modules` / `module_progress`
-Confidence & skills content ([F-12](01-product-spec.md#f-12--confidence--skills-track--p1)). Content ships as MDX in the repo and is *registered* in the DB only for trigger rules and progress tracking.
+
+Confidence & skills content ([F-12](01-product-spec.md#f-12--confidence--skills-track--p1)). Content ships as MDX in the repo and is _registered_ in the DB only for trigger rules and progress tracking.
 
 ```sql
 create table content_modules (
@@ -457,6 +464,7 @@ create policy "coach can read athlete sessions" on sessions
 ```
 
 Rules:
+
 - No table is ever left without RLS, including join tables.
 - `service_role` is used only in server-side route handlers and webhook receivers, never shipped to the client.
 - Every policy has a corresponding test in `tests/rls/` that asserts a second user **cannot** read or write the first user's rows. This is the one test suite that must never be skipped.
@@ -497,4 +505,4 @@ Expected data volume per active user per year: ~250 sessions, ~250 activities, 3
 ## Data export & deletion
 
 - **Export** (`GET /api/me/export`): a single JSON document containing every row owned by the user, plus GPX/FIT files from Storage where available. Generated as a background job, delivered as a signed URL.
-- **Delete**: `on delete cascade` from `auth.users` removes everything. Integration tokens are revoked with the provider *before* the row is dropped. Storage objects are purged by a scheduled job within 30 days.
+- **Delete**: `on delete cascade` from `auth.users` removes everything. Integration tokens are revoked with the provider _before_ the row is dropped. Storage objects are purged by a scheduled job within 30 days.

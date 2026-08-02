@@ -29,12 +29,14 @@ Corollaries:
 ## Consequences
 
 **Good**
+
 - The riskiest code is the most testable code, with no mocks anywhere.
 - Fast tests: thousands of generated plans validate in seconds.
 - The generator can run identically on the server (route handler) or the client (offline re-plan), because it has no environment dependencies.
 - Phase 3's adaptive model can be swapped in behind the same function signatures.
 
 **Bad**
+
 - Some awkwardness: callers must fetch everything the domain needs up front and pass it in, which makes some signatures wide.
 - Date handling requires discipline — a stray `new Date()` silently breaks determinism, which is why it's lint-enforced rather than a convention.
 - Duplication risk between what the domain computes and what SQL could aggregate. Resolved in the domain's favour: correctness and testability beat a marginally cheaper query.

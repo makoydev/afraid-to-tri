@@ -1,6 +1,6 @@
 # 02 — User Flows
 
-Flows are written screen-by-screen with the decision points and edge cases that matter for implementation. ASCII wireframes are indicative of *hierarchy and thumb-reach*, not final visual design — see [06-design-system.md](06-design-system.md).
+Flows are written screen-by-screen with the decision points and edge cases that matter for implementation. ASCII wireframes are indicative of _hierarchy and thumb-reach_, not final visual design — see [06-design-system.md](06-design-system.md).
 
 ---
 
@@ -68,13 +68,13 @@ flowchart TD
 
 ### Screen 2 — Starting point
 
-Three compact blocks, one per discipline. Each asks the *easiest possible* question:
+Three compact blocks, one per discipline. Each asks the _easiest possible_ question:
 
-| Discipline | Question | Answer type |
-|---|---|---|
-| Swim | "How far can you swim without stopping?" | Can't swim yet / < 100 m / 100–400 m / 400–1000 m / 1 km+ |
-| Bike | "How long can you ride comfortably?" | Never / < 20 min / 20–45 min / 45–90 min / 90 min+ |
-| Run | "How long can you run without walking?" | Can't yet / < 10 min / 10–20 min / 20–40 min / 40 min+ |
+| Discipline | Question                                 | Answer type                                               |
+| ---------- | ---------------------------------------- | --------------------------------------------------------- |
+| Swim       | "How far can you swim without stopping?" | Can't swim yet / < 100 m / 100–400 m / 400–1000 m / 1 km+ |
+| Bike       | "How long can you ride comfortably?"     | Never / < 20 min / 20–45 min / 45–90 min / 90 min+        |
+| Run        | "How long can you run without walking?"  | Can't yet / < 10 min / 10–20 min / 20–40 min / 40 min+    |
 
 Plus a one-tap confidence chip per discipline (😰 nervous / 🙂 okay / 💪 confident). Confidence, not just capability, drives which [F-12](01-product-spec.md#f-12--confidence--skills-track--p1) modules surface and how conservative the ramp is.
 
@@ -90,15 +90,15 @@ This is the constraint the generator respects most strictly. Users overestimate 
 
 ### Screen 6 — Plan preview
 
-- Headline: *"14 weeks. 4 sessions a week. About 4h30 a week to start, 6h at peak."*
+- Headline: _"14 weeks. 4 sessions a week. About 4h30 a week to start, 6h at peak."_
 - A phase bar (Prep → Base → Build → Peak → Taper → 🏁) with week counts.
 - Week 1 expanded, in full.
-- Estimated finish: **1:35 – 1:55**, labelled *estimate, will sharpen as you train*.
-- Primary: **Start plan**. Secondary: *Adjust something*.
+- Estimated finish: **1:35 – 1:55**, labelled _estimate, will sharpen as you train_.
+- Primary: **Start plan**. Secondary: _Adjust something_.
 
 ### Account prompt
 
-Deferred until *after* the plan exists and ideally after the first logged session. Framed as protection, not registration: *"Save your plan so you don't lose it."* Anonymous data migrates in place.
+Deferred until _after_ the plan exists and ideally after the first logged session. Framed as protection, not registration: _"Save your plan so you don't lose it."_ Anonymous data migrates in place.
 
 ---
 
@@ -161,9 +161,10 @@ flowchart LR
 └──────────────────────────────┘
 ```
 
-**Rest-day variant** replaces the hero with a rest card: *"Rest day. This is when you actually get fitter — the training only creates the stimulus."* Optional mobility suggestion, never a guilt trip, never an empty state.
+**Rest-day variant** replaces the hero with a rest card: _"Rest day. This is when you actually get fitter — the training only creates the stimulus."_ Optional mobility suggestion, never a guilt trip, never an empty state.
 
 **Nudge slot rules:** at most one, priority order —
+
 1. Safety (illness flag follow-up, pain reported yesterday)
 2. Unlogged session from the last 48 h
 3. Contextual confidence module ([F-12](01-product-spec.md#f-12--confidence--skills-track--p1))
@@ -228,6 +229,7 @@ sequenceDiagram
 ```
 
 Design rules:
+
 - One number dominates. Everything else is secondary.
 - Colour band behind the HR line: below / in / above zone. Never colour alone — text state accompanies it.
 - Screen-off is a supported mode: audio cues carry the whole session.
@@ -235,13 +237,13 @@ Design rules:
 
 ### Interruptions
 
-| Event | Behaviour |
-|---|---|
-| Incoming call | Auto-pause, resume prompt on return |
-| App backgrounded | Timer continues from wall clock; audio continues |
-| App killed | Checkpoint restored on relaunch; resume offered for 6 h |
-| Battery < 10% | Offer low-power mode: screen off, audio only |
-| User ends early | Log partial, ask why, never mark as failure |
+| Event            | Behaviour                                               |
+| ---------------- | ------------------------------------------------------- |
+| Incoming call    | Auto-pause, resume prompt on return                     |
+| App backgrounded | Timer continues from wall clock; audio continues        |
+| App killed       | Checkpoint restored on relaunch; resume offered for 6 h |
+| Battery < 10%    | Offer low-power mode: screen off, audio only            |
+| User ends early  | Log partial, ask why, never mark as failure             |
 
 ---
 
@@ -271,7 +273,7 @@ Two taps in the common case.
 
 - Faces map to RPE bands (1–2 / 3–4 / 5–6 / 7–8 / 9–10).
 - **Pain** opens the injury path: reduce load, suggest rest, surface "see a professional" guidance, never diagnose.
-- If adaptation changed anything, a dismissible note follows: *"Because that felt hard, I've made Thursday easier. Undo?"*
+- If adaptation changed anything, a dismissible note follows: _"Because that felt hard, I've made Thursday easier. Undo?"_
 
 ---
 
@@ -298,6 +300,7 @@ flowchart TD
 ```
 
 **Rules**
+
 - Never carry more than one missed session forward.
 - Never let a rebalance push a week above its ramp cap — drop the lowest-value session instead.
 - 3+ consecutive missed days → offer a full re-plan ("Life happened. Want me to rebuild from here?").
@@ -309,15 +312,15 @@ flowchart TD
 
 Starts 7 days out; the Today screen changes shape.
 
-| Day | Screen emphasis |
-|---|---|
-| −7 | Race week banner opens. Taper explainer: *"Training drops now. You'll feel twitchy. That's the point."* |
-| −6 to −3 | Short sharpening sessions. Gear checklist card appears, progress-tracked. |
-| −2 | Race walkthrough module surfaces. Travel/logistics checklist. |
-| −1 | Very short session or rest. Pacing plan revealed. Fuelling plan finalized. Bag-packing checklist by transition bag. |
+| Day      | Screen emphasis                                                                                                           |
+| -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| −7       | Race week banner opens. Taper explainer: _"Training drops now. You'll feel twitchy. That's the point."_                   |
+| −6 to −3 | Short sharpening sessions. Gear checklist card appears, progress-tracked.                                                 |
+| −2       | Race walkthrough module surfaces. Travel/logistics checklist.                                                             |
+| −1       | Very short session or rest. Pacing plan revealed. Fuelling plan finalized. Bag-packing checklist by transition bag.       |
 | Race day | **Race mode**: hour-by-hour morning schedule, pacing targets per leg, checklist, and nothing else. No training UI at all. |
-| +1 | Result logging + reflection prompt. |
-| +2 to +7 | Guided recovery week, then "what's next?" — repeat distance, step up, or off-season. |
+| +1       | Result logging + reflection prompt.                                                                                       |
+| +2 to +7 | Guided recovery week, then "what's next?" — repeat distance, step up, or off-season.                                      |
 
 ### Race mode
 
@@ -370,7 +373,7 @@ Matching rules and dedupe are specified in [07-integrations.md](07-integrations.
 
 ---
 
-## H. Coach ↔ athlete *(Phase 4)*
+## H. Coach ↔ athlete _(Phase 4)_
 
 1. Coach invites athlete by email or link → athlete accepts, choosing what to share (plan only / plan + logs / everything).
 2. Coach roster shows each athlete's week, adherence, and flags (missed 3+, pain reported, high RPE trend).
@@ -382,11 +385,11 @@ Matching rules and dedupe are specified in [07-integrations.md](07-integrations.
 
 ## Empty & error states
 
-| State | Treatment |
-|---|---|
-| No plan yet | Full-bleed CTA to onboarding, with a 30-second explainer |
-| No data for a chart | Explainer of what the chart will show and when it unlocks |
-| Offline | Persistent slim banner; all cached content usable; queued-changes count |
-| Sync failed | Non-blocking toast + retry affordance; data never discarded |
-| Integration token expired | Card on Today screen with one-tap reconnect |
-| Race date passed, no result | Prompt to log the race or mark it as not raced — never left dangling |
+| State                       | Treatment                                                               |
+| --------------------------- | ----------------------------------------------------------------------- |
+| No plan yet                 | Full-bleed CTA to onboarding, with a 30-second explainer                |
+| No data for a chart         | Explainer of what the chart will show and when it unlocks               |
+| Offline                     | Persistent slim banner; all cached content usable; queued-changes count |
+| Sync failed                 | Non-blocking toast + retry affordance; data never discarded             |
+| Integration token expired   | Card on Today screen with one-tap reconnect                             |
+| Race date passed, no result | Prompt to log the race or mark it as not raced — never left dangling    |

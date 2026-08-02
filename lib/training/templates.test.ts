@@ -36,7 +36,9 @@ describe('every workout template', () => {
         const steps = t.build(total);
         const summed = stepsTotalSeconds(asSession(steps));
         if (summed !== total) {
-          throw new Error(`${id} @ ${String(minutes)}min: steps sum to ${String(summed)}, not ${String(total)}`);
+          throw new Error(
+            `${id} @ ${String(minutes)}min: steps sum to ${String(summed)}, not ${String(total)}`,
+          );
         }
         return true;
       }),
@@ -50,10 +52,14 @@ describe('every workout template', () => {
       fc.property(fc.integer({ min: 5, max: 120 }), (minutes) => {
         for (const step of t.build(minutes * 60)) {
           if (step.durationSec <= 0) {
-            throw new Error(`${id} @ ${String(minutes)}min: step "${step.label}" is ${String(step.durationSec)}s`);
+            throw new Error(
+              `${id} @ ${String(minutes)}min: step "${step.label}" is ${String(step.durationSec)}s`,
+            );
           }
           if (step.recovery && step.recovery.durationSec <= 0) {
-            throw new Error(`${id} @ ${String(minutes)}min: recovery on "${step.label}" is non-positive`);
+            throw new Error(
+              `${id} @ ${String(minutes)}min: recovery on "${step.label}" is non-positive`,
+            );
           }
           if ((step.repeats ?? 1) < 1) {
             throw new Error(`${id} @ ${String(minutes)}min: step "${step.label}" repeats < 1`);

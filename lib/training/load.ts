@@ -121,7 +121,9 @@ export interface SessionLoadInput {
 export function sessionLoad(input: SessionLoadInput): number {
   const { durationSec, intensityRatio: ir, discipline } = input;
   if (!Number.isFinite(durationSec) || durationSec < 0) {
-    throw new RangeError(`Duration must be a non-negative number of seconds, got ${String(durationSec)}.`);
+    throw new RangeError(
+      `Duration must be a non-negative number of seconds, got ${String(durationSec)}.`,
+    );
   }
   if (!Number.isFinite(ir) || ir < 0) {
     throw new RangeError(`Intensity ratio must be a non-negative number, got ${String(ir)}.`);
@@ -209,7 +211,10 @@ export function freshnessBand(freshness: number): FreshnessReading {
     };
   }
   if (freshness > 5) {
-    return { label: 'Fresh', copy: 'Fresh and ready. This is where you want to be on race morning.' };
+    return {
+      label: 'Fresh',
+      copy: 'Fresh and ready. This is where you want to be on race morning.',
+    };
   }
   if (freshness > -10) {
     return {

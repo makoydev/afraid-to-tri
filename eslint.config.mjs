@@ -110,8 +110,7 @@ export default tseslint.config(
         },
         {
           selector: "MemberExpression[object.name='Math'][property.name='random']",
-          message:
-            'Ambient randomness breaks determinism. Pass in a seeded generator (ADR-0006).',
+          message: 'Ambient randomness breaks determinism. Pass in a seeded generator (ADR-0006).',
         },
       ],
     },
@@ -129,8 +128,7 @@ export default tseslint.config(
         {
           object: 'process',
           property: 'env',
-          message:
-            'Read environment variables through lib/env.ts so they are validated at boot.',
+          message: 'Read environment variables through lib/env.ts so they are validated at boot.',
         },
       ],
     },
@@ -146,6 +144,24 @@ export default tseslint.config(
   {
     files: ['next.config.ts'],
     rules: { '@typescript-eslint/require-await': 'off' },
+  },
+
+  /* Node-side scripts and harnesses: real Node globals, console allowed. */
+  {
+    files: ['scripts/**', 'tests/**'],
+    languageOptions: {
+      globals: {
+        process: 'readonly',
+        console: 'readonly',
+        Buffer: 'readonly',
+        URL: 'readonly',
+        __dirname: 'readonly',
+      },
+    },
+    rules: {
+      'no-console': 'off',
+      'no-restricted-properties': 'off',
+    },
   },
 
   /* Tests may do anything the runtime allows. */

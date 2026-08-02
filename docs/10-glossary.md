@@ -3,7 +3,8 @@
 Every term the app might show a user, in plain English. This is a **product surface**, not just documentation: it's the source content for the `JargonChip` component ([06](06-design-system.md#zonechip--disciplinechip--jargonchip)), so the tone here is the tone the user reads.
 
 Rules for writing an entry:
-- Lead with what it *is* in one sentence, no jargon inside the definition.
+
+- Lead with what it _is_ in one sentence, no jargon inside the definition.
 - Then why the athlete should care.
 - Never assume prior knowledge. Never be condescending.
 - Under 40 words where possible.
@@ -28,7 +29,7 @@ Rules for writing an entry:
 
 **Aquabike** — Swim and bike only. Useful if you're injured and can't run.
 
-**Wave** — Athletes start in groups rather than all at once, usually by age or ability. Your time starts when *your* wave starts.
+**Wave** — Athletes start in groups rather than all at once, usually by age or ability. Your time starts when _your_ wave starts.
 
 **Rolling start** — Instead of a mass start, athletes enter the water a few at a time. Far less intimidating, and increasingly common.
 
@@ -66,7 +67,7 @@ Rules for writing an entry:
 
 **Sighting** — Lifting your eyes forward every few strokes to check you're swimming in the right direction. Without it people swim impressive distances sideways.
 
-**Wetsuit legal** — Whether wetsuits are allowed, decided by water temperature on the day. Wetsuits make you warmer *and* faster because they float you.
+**Wetsuit legal** — Whether wetsuits are allowed, decided by water temperature on the day. Wetsuits make you warmer _and_ faster because they float you.
 
 **Cold shock** — The gasp-and-panic reaction when you first get into cold water. It passes in 60–90 seconds. Knowing it's coming is most of the battle: get in slowly, put your face in, breathe out.
 
@@ -90,7 +91,7 @@ Rules for writing an entry:
 
 **Drafting (bike)** — Riding close behind someone to save effort. **Illegal in most age-group triathlons.** Leave the required gap or you'll get a penalty.
 
-**Clipless pedals** — Confusingly, these are the pedals you *do* clip into with special shoes. Optional. Flat pedals and trainers are completely fine for your first race.
+**Clipless pedals** — Confusingly, these are the pedals you _do_ clip into with special shoes. Optional. Flat pedals and trainers are completely fine for your first race.
 
 **Aero bars** — Handlebar extensions that let you tuck into a lower position. Faster, but they need practice before you use them in a crowd.
 
@@ -116,7 +117,7 @@ Rules for writing an entry:
 
 ## Training
 
-**Zone** — A band of effort, from very easy (Zone 1) to flat out (Zone 5). Most of your training should be in Zones 1–2, which usually feels *too easy*. It isn't.
+**Zone** — A band of effort, from very easy (Zone 1) to flat out (Zone 5). Most of your training should be in Zones 1–2, which usually feels _too easy_. It isn't.
 
 **RPE (Rate of Perceived Exertion)** — How hard it felt, 1 to 10. Unfashionably simple and surprisingly reliable.
 

@@ -19,23 +19,25 @@ The TypeScript `Step[]` type in `lib/training/` is the single definition; the Zo
 ## Consequences
 
 **Good**
+
 - One row read serves the whole workout detail screen and the entire live-workout session. No joins, no recursion.
 - Steps serialize to IndexedDB for offline use without any transformation — which matters, because the live workout must run from cache.
 - Schema evolution is cheap: adding an optional field to a step doesn't need a migration.
 - Templates and generated sessions share one shape.
 
 **Bad**
+
 - No referential integrity on step contents; correctness depends on validation discipline.
 - Cannot query inside steps efficiently without a GIN index, which we'd add only if a real need appeared.
 - Migrating the step shape means rewriting rows rather than altering a column. Mitigated by versioning the structure (`steps.version`) and handling old shapes on read.
 
 ## Alternatives considered
 
-| Option | Why not |
-|---|---|
-| **Normalized `session_steps` table** | Recursive CTEs and a polymorphic target column, to support a query nobody wants to run. Costs are real; benefits are hypothetical. |
+| Option                                                                              | Why not                                                                                                                                        |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Normalized `session_steps` table**                                                | Recursive CTEs and a polymorphic target column, to support a query nobody wants to run. Costs are real; benefits are hypothetical.             |
 | **A workout DSL stored as text** (à la Zwift `.zwo` or a `4x8min@Z4` mini-language) | Compact and human-editable, but needs a parser, and the parser becomes a source of bugs in the one code path that must never fail mid-session. |
-| **Steps only on templates, sessions reference a template + scale factor** | Elegant until the athlete edits one session, or an adaptation shortens a single interval. Sessions need to be independently mutable. |
+| **Steps only on templates, sessions reference a template + scale factor**           | Elegant until the athlete edits one session, or an adaptation shortens a single interval. Sessions need to be independently mutable.           |
 
 ## Revisit if
 

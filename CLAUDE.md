@@ -1,6 +1,6 @@
 # Working in this repo
 
-Conventions for anyone — human or agent — writing code here. Read [docs/](docs/) first; this file only covers *how* to work, not *what* to build.
+Conventions for anyone — human or agent — writing code here. Read [docs/](docs/) first; this file only covers _how_ to work, not _what_ to build.
 
 ## Current state
 
@@ -35,11 +35,11 @@ User-facing strings go through `lib/format/` and are externalized. Before writin
 
 ## Testing
 
-| Suite | Command | Gate |
-|---|---|---|
-| Unit | `pnpm test` | All of `lib/training/` covered, including property tests |
-| RLS | `pnpm test:rls` | Runs against an ephemeral database in CI |
-| E2E | `pnpm test:e2e` | Must include the offline log-and-sync scenario |
+| Suite  | Command           | Gate                                                                                                 |
+| ------ | ----------------- | ---------------------------------------------------------------------------------------------------- |
+| Unit   | `pnpm test`       | All of `lib/training/` covered, including property tests                                             |
+| RLS    | `pnpm test:rls`   | Runs against an ephemeral database in CI                                                             |
+| E2E    | `pnpm test:e2e`   | Must include the offline log-and-sync scenario                                                       |
 | Budget | `pnpm lighthouse` | Fails the PR if the perf budget in [docs/05](docs/05-architecture.md#performance-budget) is exceeded |
 
 New training logic without unit tests doesn't merge. Everything else is negotiable.

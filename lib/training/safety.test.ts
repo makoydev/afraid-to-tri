@@ -199,8 +199,20 @@ describe('validatePlan — run volume', () => {
     const plan = makePlan({
       weeks: [{}, {}],
       sessions: [
-        { id: 'r1', date: iso('2026-08-08'), discipline: 'run', plannedSeconds: 3600, weekIndex: 0 },
-        { id: 'r2', date: iso('2026-08-15'), discipline: 'run', plannedSeconds: 4500, weekIndex: 1 },
+        {
+          id: 'r1',
+          date: iso('2026-08-08'),
+          discipline: 'run',
+          plannedSeconds: 3600,
+          weekIndex: 0,
+        },
+        {
+          id: 'r2',
+          date: iso('2026-08-15'),
+          discipline: 'run',
+          plannedSeconds: 4500,
+          weekIndex: 1,
+        },
       ],
     });
     expect(codes(plan)).toContain('LONG_RUN_RAMP_TOO_STEEP');
@@ -210,9 +222,27 @@ describe('validatePlan — run volume', () => {
     const plan = makePlan({
       weeks: [{}, { isRecovery: true, targetLoad: 120 }, { targetLoad: 200 }],
       sessions: [
-        { id: 'r1', date: iso('2026-08-08'), discipline: 'run', plannedSeconds: 3600, weekIndex: 0 },
-        { id: 'r2', date: iso('2026-08-15'), discipline: 'run', plannedSeconds: 2400, weekIndex: 1 },
-        { id: 'r3', date: iso('2026-08-22'), discipline: 'run', plannedSeconds: 3700, weekIndex: 2 },
+        {
+          id: 'r1',
+          date: iso('2026-08-08'),
+          discipline: 'run',
+          plannedSeconds: 3600,
+          weekIndex: 0,
+        },
+        {
+          id: 'r2',
+          date: iso('2026-08-15'),
+          discipline: 'run',
+          plannedSeconds: 2400,
+          weekIndex: 1,
+        },
+        {
+          id: 'r3',
+          date: iso('2026-08-22'),
+          discipline: 'run',
+          plannedSeconds: 3700,
+          weekIndex: 2,
+        },
       ],
     });
     expect(codes(plan)).not.toContain('LONG_RUN_RAMP_TOO_STEEP');
@@ -222,8 +252,20 @@ describe('validatePlan — run volume', () => {
     const plan = makePlan({
       weeks: [{}, {}],
       sessions: [
-        { id: 'r1', date: iso('2026-08-08'), discipline: 'run', plannedSeconds: 3600, weekIndex: 0 },
-        { id: 'r2', date: iso('2026-08-15'), discipline: 'run', plannedSeconds: 3960, weekIndex: 1 },
+        {
+          id: 'r1',
+          date: iso('2026-08-08'),
+          discipline: 'run',
+          plannedSeconds: 3600,
+          weekIndex: 0,
+        },
+        {
+          id: 'r2',
+          date: iso('2026-08-15'),
+          discipline: 'run',
+          plannedSeconds: 3960,
+          weekIndex: 1,
+        },
       ],
     });
     expect(codes(plan)).not.toContain('LONG_RUN_RAMP_TOO_STEEP');

@@ -110,7 +110,9 @@ export function powerZonesFromFtp(ftpWatts: number): ZoneTable {
   if (!Number.isFinite(ftpWatts) || ftpWatts <= 0) {
     throw new RangeError(`FTP must be a positive number of watts, got ${String(ftpWatts)}.`);
   }
-  const uppers = [0.55, 0.75, 0.9, 1.05].map((f) => Math.round(ftpWatts * f) - (f === 0.55 ? 1 : 0));
+  const uppers = [0.55, 0.75, 0.9, 1.05].map(
+    (f) => Math.round(ftpWatts * f) - (f === 0.55 ? 1 : 0),
+  );
   // Zone 1 is strictly below 55%; the others are inclusive of their top figure.
   return fromUpperBounds(uppers, Math.round(ftpWatts * 1.6));
 }

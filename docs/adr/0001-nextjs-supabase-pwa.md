@@ -23,12 +23,14 @@ We need a mobile-first triathlon training app built by a very small team. The re
 ## Consequences
 
 **Good**
+
 - One language, one repo, one deploy.
 - RLS means a missed authorization check in application code is not automatically a data breach.
 - Preview deploys per PR make beta testing trivial.
 - Free tiers cover development entirely.
 
 **Bad**
+
 - **No HealthKit or Health Connect access.** This is the real cost, and it caps [F-21](../01-product-spec.md#f-21--apple-health--health-connect--p2) until we ship a native shell. Accepted because Strava aggregates most devices anyway.
 - iOS PWA support lags: push requires install-to-home-screen, and Background Sync is unavailable, so we need an app-focus sync fallback.
 - Vendor concentration on Supabase. Mitigated by it being plain Postgres — the data is portable, and only Auth and Storage would need replacing.
@@ -36,12 +38,12 @@ We need a mobile-first triathlon training app built by a very small team. The re
 
 ## Alternatives considered
 
-| Option | Why not |
-|---|---|
-| **React Native / Expo** | Best device access and the only path to HealthKit, but app-store friction, a heavier build, and a worse "just open the link" beta story. Would be the right call if wearables were the core of the product; they're an accelerant. |
-| **Vite SPA + Supabase** | Simpler mental model and easier offline, but no server-side rendering (worse first paint on mobile) and no place for webhooks without a second service. |
-| **Next.js + custom backend (Nest/Fastify + Prisma)** | More control, far more code, and we'd be hand-writing the authorization layer RLS gives us for free. |
-| **Firebase** | Great offline story, but the document model fits this relational domain badly, and querying "sessions in this date range grouped by week" would be painful. |
+| Option                                               | Why not                                                                                                                                                                                                                            |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **React Native / Expo**                              | Best device access and the only path to HealthKit, but app-store friction, a heavier build, and a worse "just open the link" beta story. Would be the right call if wearables were the core of the product; they're an accelerant. |
+| **Vite SPA + Supabase**                              | Simpler mental model and easier offline, but no server-side rendering (worse first paint on mobile) and no place for webhooks without a second service.                                                                            |
+| **Next.js + custom backend (Nest/Fastify + Prisma)** | More control, far more code, and we'd be hand-writing the authorization layer RLS gives us for free.                                                                                                                               |
+| **Firebase**                                         | Great offline story, but the document model fits this relational domain badly, and querying "sessions in this date range grouped by week" would be painful.                                                                        |
 
 ## Revisit if
 

@@ -20,6 +20,7 @@ Priority: **P0** = MVP cannot ship without it · **P1** = should be in the phase
 - Account deletion available in-app; hard-deletes all rows within 30 days.
 
 **Acceptance**
+
 - [ ] A user can reach a generated plan without ever entering an email.
 - [ ] Signing up after anonymous onboarding preserves the plan, profile, and any logged sessions.
 - [ ] Auth state survives a cold app launch offline (cached session).
@@ -33,21 +34,23 @@ Priority: **P0** = MVP cannot ship without it · **P1** = should be in the phase
 
 Six steps, each one screen, each skippable except goal and availability. Progress bar at top, back always available. Full flow in [02-user-flows.md](02-user-flows.md#a-onboarding).
 
-| Step | Asks | Notes |
-|---|---|---|
-| 1 · Goal | Race distance + date, **or** "just get fitter" (no date) | Distance picker uses plain descriptions, not just names: *Sprint — 750 m swim, 20 km bike, 5 km run. About 1h20 for most first-timers.* |
-| 2 · Starting point | Per discipline: comfortable continuous distance/time, plus one-tap confidence rating (😰 / 🙂 / 💪) | No pace or HR asked. "Can't swim yet" is a first-class answer that unlocks the Learn-to-Swim track (F-12). |
-| 3 · Availability | Days per week + typical minutes per day + which days are long-session friendly | Drives total plan volume. |
-| 4 · Equipment | Bike type, pool access, gym/trainer, watch/HR strap | Gates workout types (e.g. no trainer → no ERG-style sets). |
-| 5 · Constraints | Injuries/limitations (free text + common chips), blackout dates (holidays) | Blackout dates are respected by the generator, not just greyed out. |
-| 6 · Preview | Shows generated plan summary + week 1, then "Start plan" | Editable before committing. |
+| Step               | Asks                                                                                                | Notes                                                                                                                                   |
+| ------------------ | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 1 · Goal           | Race distance + date, **or** "just get fitter" (no date)                                            | Distance picker uses plain descriptions, not just names: _Sprint — 750 m swim, 20 km bike, 5 km run. About 1h20 for most first-timers._ |
+| 2 · Starting point | Per discipline: comfortable continuous distance/time, plus one-tap confidence rating (😰 / 🙂 / 💪) | No pace or HR asked. "Can't swim yet" is a first-class answer that unlocks the Learn-to-Swim track (F-12).                              |
+| 3 · Availability   | Days per week + typical minutes per day + which days are long-session friendly                      | Drives total plan volume.                                                                                                               |
+| 4 · Equipment      | Bike type, pool access, gym/trainer, watch/HR strap                                                 | Gates workout types (e.g. no trainer → no ERG-style sets).                                                                              |
+| 5 · Constraints    | Injuries/limitations (free text + common chips), blackout dates (holidays)                          | Blackout dates are respected by the generator, not just greyed out.                                                                     |
+| 6 · Preview        | Shows generated plan summary + week 1, then "Start plan"                                            | Editable before committing.                                                                                                             |
 
 **Behaviour**
+
 - Answers are persisted after every step (resumable if the user drops out).
 - If no race date: generates a rolling 12-week base-building block that extends itself.
 - Estimated finish time shown as a **range**, clearly labelled an estimate.
 
 **Acceptance**
+
 - [ ] Median completion time under 90 seconds on a phone.
 - [ ] Every step is reachable and completable one-handed.
 - [ ] No screen contains an unexplained domain term.
@@ -66,9 +69,10 @@ Full algorithm in [03-training-model.md](03-training-model.md#plan-generation). 
 - Build/recovery cycling (3:1, or 2:1 for older/lower-volume athletes).
 - Discipline balance weighted toward the user's weakest and the race's most time-consuming leg.
 - Includes brick sessions from the Build phase, plus at least one open-water session and one full race-simulation before race day where feasible.
-- If the runway is too short for the goal, the app says so honestly and offers: *shorter distance*, *later race*, or *"finish, don't race" mode* with reduced intensity.
+- If the runway is too short for the goal, the app says so honestly and offers: _shorter distance_, _later race_, or _"finish, don't race" mode_ with reduced intensity.
 
 **Acceptance**
+
 - [ ] A plan is generated in under 2 seconds for a 24-week race horizon.
 - [ ] Total weekly hours never exceed the user's stated availability by more than 10%.
 - [ ] Week-over-week load increase never exceeds the configured ramp cap.
@@ -90,6 +94,7 @@ The default screen. Single-column, scrollable, with:
 4. **Nudge slot** — at most one contextual card: an unlogged session from yesterday, a due fitness check-in, an unread coach comment, a weather warning for a planned outdoor session.
 
 **Acceptance**
+
 - [ ] First meaningful paint under 1.5 s on a mid-range Android over 3G.
 - [ ] Screen is fully usable offline from cache.
 - [ ] Start button reachable by an average thumb without shifting grip.
@@ -110,6 +115,7 @@ The default screen. Single-column, scrollable, with:
 - Past sessions show planned vs. actual side by side.
 
 **Acceptance**
+
 - [ ] Dragging a session to a new day updates the plan and recomputes weekly load.
 - [ ] Moving a session that creates a conflict shows a non-blocking warning with a one-tap "fix it for me".
 - [ ] Week view renders 7 days without horizontal scrolling at 360 px width.
@@ -128,6 +134,7 @@ The default screen. Single-column, scrollable, with:
 - Alternatives: **"I can't do this today"** → offers a shorter version, an indoor version, or a different discipline.
 
 **Acceptance**
+
 - [ ] Every session has a non-empty purpose string.
 - [ ] Structured steps sum to the stated total duration (±1 min).
 - [ ] The alternatives sheet always returns at least one viable option.
@@ -149,6 +156,7 @@ Full-screen, high-contrast, minimal-chrome mode. See flow in [02-user-flows.md](
 - **Crash recovery**: state is checkpointed every 5 s; relaunching within 6 hours offers to resume.
 
 **Acceptance**
+
 - [ ] A 60-minute session runs to completion with the device in flight mode.
 - [ ] Audio cues fire correctly with the screen locked.
 - [ ] Killing the app mid-session and reopening offers resume with correct elapsed time.
@@ -162,11 +170,13 @@ Full-screen, high-contrast, minimal-chrome mode. See flow in [02-user-flows.md](
 **Story:** After a session I log it in seconds, and my plan adjusts to how it actually went.
 
 **Logging** — the post-session screen asks for as little as possible:
+
 - One-tap **RPE** (1–10, shown as five labelled faces mapping to a 1–10 scale).
 - Optional: actual duration/distance (pre-filled from live mode), one-line note, a "how did the body feel" flag (fine / niggle / pain — pain triggers the injury path).
 - If the session came from Strava/Garmin (F-11), everything is pre-filled and the user just confirms.
 
 **Adaptation** — rules run nightly and after each log. Full logic in [03-training-model.md](03-training-model.md#adaptation-engine).
+
 - Missed sessions decay rather than pile up: never reschedule more than one missed session forward, never grow a week beyond its ramp cap.
 - Repeated high RPE on easy sessions → reduce next week's intensity.
 - Repeated low RPE with completed volume → allow a slightly faster ramp.
@@ -175,6 +185,7 @@ Full-screen, high-contrast, minimal-chrome mode. See flow in [02-user-flows.md](
 - **Every adjustment is announced** in plain language and is undoable.
 
 **Acceptance**
+
 - [ ] Logging a completed session takes ≤ 2 taps in the common case.
 - [ ] Missing a week produces a rebalanced plan, not a backlog.
 - [ ] Every automatic change appears in a visible "what changed and why" note.
@@ -194,13 +205,14 @@ Full-screen, high-contrast, minimal-chrome mode. See flow in [02-user-flows.md](
 - Predicted race time as a **range**, updating as data accumulates, with confidence stated.
 
 **Acceptance**
+
 - [ ] No chart renders without enough data to be meaningful — shows an explainer instead.
 - [ ] Every chart has a one-sentence interpretation underneath.
 - [ ] Milestone cards export as a shareable image without any account required.
 
 ---
 
-### F-10 · Race day toolkit · P0 *(user-prioritized)*
+### F-10 · Race day toolkit · P0 _(user-prioritized)_
 
 **Story:** I know exactly what happens on race day, so the unknown stops being scary.
 
@@ -214,6 +226,7 @@ Full-screen, high-contrast, minimal-chrome mode. See flow in [02-user-flows.md](
 - **Post-race**: log result, capture a reflection, then a guided recovery week and a "what next" prompt.
 
 **Acceptance**
+
 - [ ] Checklist is generated, not static, and reflects wetsuit-legality by water temperature.
 - [ ] Walkthrough is fully readable offline.
 - [ ] Pacing targets are never more aggressive than the athlete's demonstrated training paces.
@@ -221,7 +234,7 @@ Full-screen, high-contrast, minimal-chrome mode. See flow in [02-user-flows.md](
 
 ---
 
-### F-11 · Activity import — Strava · P0 *(user-prioritized)*
+### F-11 · Activity import — Strava · P0 _(user-prioritized)_
 
 **Story:** My watch already records everything; I shouldn't type it in again.
 
@@ -232,6 +245,7 @@ Full-screen, high-contrast, minimal-chrome mode. See flow in [02-user-flows.md](
 - Disconnect revokes tokens and stops all sync; imported data is retained unless the user deletes it.
 
 **Acceptance**
+
 - [ ] A ride finished on a Garmin appears in the app within 5 minutes without user action.
 - [ ] The same activity is never imported twice (idempotent on external ID).
 - [ ] Ambiguous matches ask rather than guess.
@@ -252,6 +266,7 @@ This is the feature that earns the app's name. Short, calm, mostly-text modules 
 - **The mental stuff** — being last, DNF-ing, race-morning nerves, imposter feelings.
 
 **Acceptance**
+
 - [ ] Modules surface contextually at least once each during a standard 14-week sprint plan.
 - [ ] Every module is under 3 minutes to read.
 - [ ] All content available offline.
@@ -259,7 +274,7 @@ This is the feature that earns the app's name. Short, calm, mostly-text modules 
 
 ---
 
-### F-13 · PWA & offline · P0 *(user-prioritized)*
+### F-13 · PWA & offline · P0 _(user-prioritized)_
 
 **Story:** The app works on a pool deck, in a basement, and on a mountain.
 
@@ -270,6 +285,7 @@ This is the feature that earns the app's name. Short, calm, mostly-text modules 
 - Visible connectivity state and a "3 changes waiting to sync" indicator; never a blocking spinner.
 
 **Acceptance**
+
 - [ ] Cold-launch in flight mode reaches a usable Today screen.
 - [ ] A workout logged offline appears server-side after reconnect exactly once.
 - [ ] Installing to home screen produces a standalone app with no browser chrome.
@@ -284,6 +300,7 @@ This is the feature that earns the app's name. Short, calm, mostly-text modules 
 - Never guilt-framed. "Rest day today — enjoy it" is a valid notification.
 
 **Acceptance**
+
 - [ ] Never more than 2 pushes per day.
 - [ ] Full opt-out available and respected immediately.
 - [ ] iOS install-to-home-screen requirement for push is explained rather than silently failing.
@@ -293,24 +310,31 @@ This is the feature that earns the app's name. Short, calm, mostly-text modules 
 ## Phase 2 — Depth
 
 ### F-20 · Garmin Connect integration · P1
+
 Direct Garmin OAuth + push service as an alternative to Strava, including **workout push**: tomorrow's structured session sent to the watch. See [07-integrations.md](07-integrations.md).
 
 ### F-21 · Apple Health / Health Connect · P2
+
 Read workouts, resting HR, HRV, sleep. Feeds readiness (F-23).
 
 ### F-22 · Fitness tests & zones · P1
-Guided protocols with in-app timers: run threshold test, bike 20-min test, swim CSS test (400 m + 200 m). Results set personalized zones; the app schedules retests every 6–8 weeks. Zones are *unlocked* by testing, keeping beginners on RPE until they're ready.
+
+Guided protocols with in-app timers: run threshold test, bike 20-min test, swim CSS test (400 m + 200 m). Results set personalized zones; the app schedules retests every 6–8 weeks. Zones are _unlocked_ by testing, keeping beginners on RPE until they're ready.
 
 ### F-23 · Readiness check-in · P2
+
 Optional 10-second morning check: sleep, soreness, motivation, plus resting HR/HRV if available. Produces a readiness band that can soften or harden today's session. Advisory only, always overridable.
 
 ### F-24 · Route & weather awareness · P2
+
 Weather forecast on outdoor sessions; heat/cold/wind guidance; auto-suggests moving an outdoor session indoors, or swapping days, when the forecast is bad.
 
 ### F-25 · Multi-race season planning · P2
+
 Multiple A/B/C races in a season, with the plan periodized around priorities rather than a single target.
 
 ### F-26 · Equipment tracker · P2
+
 Bike/shoe/wetsuit mileage, chain-wear and shoe-replacement reminders.
 
 ---
@@ -318,42 +342,50 @@ Bike/shoe/wetsuit mileage, chain-wear and shoe-replacement reminders.
 ## Phase 3 — Intelligence
 
 ### F-30 · Adaptive plan v2 · P1
+
 Replace rule-based adaptation with a model that fits the individual's response curve: personalized ramp rates, discipline-specific fatigue decay, and predicted-vs-actual session outcomes.
 
 ### F-31 · AI coach chat · P2
-Conversational Q&A grounded in the user's own plan and data ("why is this week easier?", "can I move Thursday?"), able to *propose* plan changes that the user approves. Hard guardrails: no medical advice, no override of safety rails, always cites the plan data it used.
+
+Conversational Q&A grounded in the user's own plan and data ("why is this week easier?", "can I move Thursday?"), able to _propose_ plan changes that the user approves. Hard guardrails: no medical advice, no override of safety rails, always cites the plan data it used.
 
 ### F-32 · Race-time prediction v2 · P2
+
 Distance-specific models per discipline, including transition-time estimates and terrain adjustment.
 
 ### F-33 · Built-in GPS recording · P2
+
 Fallback recorder for users with no watch — record run/ride from the phone during a live session.
 
 ---
 
-## Phase 4 — Community & coaching *(user-prioritized)*
+## Phase 4 — Community & coaching _(user-prioritized)_
 
 ### F-40 · Training buddies · P1
+
 Follow friends, see their week (not a feed — a small circle), send a nudge, share a milestone card. Deliberately low-surface: no likes, no public leaderboard.
 
 ### F-41 · Shared/plan templates · P2
+
 Publish a plan you completed as a template others can start from; browse community templates by distance and hours-per-week.
 
 ### F-42 · Coach ↔ athlete · P1
+
 Coach accounts with a roster, plan authoring and assignment, per-session comments, and athlete-visible feedback. Athlete consent required and revocable; coach sees only what the athlete shares.
 
 ### F-43 · Groups & club challenges · P2
+
 Club/team spaces with group plans and non-competitive consistency challenges.
 
 ---
 
 ## Cross-cutting requirements
 
-| Area | Requirement |
-|---|---|
-| **Accessibility** | WCAG 2.2 AA. Full keyboard/screen-reader support. Live workout must be usable with VoiceOver/TalkBack and respects `prefers-reduced-motion`. Never colour alone to convey state. |
-| **Performance** | LCP < 2.0 s on mid-range Android/3G. Interaction latency < 100 ms. Initial JS budget ≤ 180 KB gzipped. |
-| **Privacy** | GDPR-compliant. Data export (JSON + GPX/FIT where applicable) and hard delete. No third-party analytics that sell data. Health data never used for advertising. |
-| **Units** | Metric/imperial toggle, respected everywhere including generated copy and audio cues. |
-| **i18n** | English at launch, but all user-facing strings externalized from day one. |
-| **Error handling** | Never lose user input. Every failure state offers a next action. Sync failures are visible but non-blocking. |
+| Area               | Requirement                                                                                                                                                                      |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Accessibility**  | WCAG 2.2 AA. Full keyboard/screen-reader support. Live workout must be usable with VoiceOver/TalkBack and respects `prefers-reduced-motion`. Never colour alone to convey state. |
+| **Performance**    | LCP < 2.0 s on mid-range Android/3G. Interaction latency < 100 ms. Initial JS budget ≤ 180 KB gzipped.                                                                           |
+| **Privacy**        | GDPR-compliant. Data export (JSON + GPX/FIT where applicable) and hard delete. No third-party analytics that sell data. Health data never used for advertising.                  |
+| **Units**          | Metric/imperial toggle, respected everywhere including generated copy and audio cues.                                                                                            |
+| **i18n**           | English at launch, but all user-facing strings externalized from day one.                                                                                                        |
+| **Error handling** | Never lose user input. Every failure state offers a next action. Sync failures are visible but non-blocking.                                                                     |

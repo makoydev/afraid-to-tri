@@ -35,20 +35,20 @@ You pick a race (or a distance and a date). The app generates a periodized swim/
 
 Read in this order:
 
-| # | Doc | What's in it |
-|---|-----|--------------|
-| 00 | [Vision & Principles](docs/00-vision.md) | Problem, positioning, personas, principles, non-goals, success metrics |
-| 01 | [Product Spec](docs/01-product-spec.md) | Every feature, phased, with acceptance criteria |
-| 02 | [User Flows](docs/02-user-flows.md) | Onboarding, the daily loop, live workout, race week |
-| 03 | [Training Model](docs/03-training-model.md) | Zones, load math, plan generation, adaptation, taper |
-| 04 | [Data Model](docs/04-data-model.md) | Postgres schema, RLS policies, indexes |
-| 05 | [Architecture](docs/05-architecture.md) | Stack, structure, offline/sync, jobs, environments |
-| 06 | [Design System](docs/06-design-system.md) | Mobile-first layout, tokens, components, accessibility |
-| 07 | [Integrations](docs/07-integrations.md) | Strava, Garmin, Apple Health / Health Connect |
-| 08 | [API Contracts](docs/08-api.md) | Route handlers, payloads, errors |
-| 09 | [Roadmap](docs/09-roadmap.md) | Phases, milestones, exit criteria |
-| 10 | [Glossary](docs/10-glossary.md) | Every piece of triathlon jargon, in plain English |
-| — | [ADRs](docs/adr/) | Architecture decision records |
+| #   | Doc                                         | What's in it                                                           |
+| --- | ------------------------------------------- | ---------------------------------------------------------------------- |
+| 00  | [Vision & Principles](docs/00-vision.md)    | Problem, positioning, personas, principles, non-goals, success metrics |
+| 01  | [Product Spec](docs/01-product-spec.md)     | Every feature, phased, with acceptance criteria                        |
+| 02  | [User Flows](docs/02-user-flows.md)         | Onboarding, the daily loop, live workout, race week                    |
+| 03  | [Training Model](docs/03-training-model.md) | Zones, load math, plan generation, adaptation, taper                   |
+| 04  | [Data Model](docs/04-data-model.md)         | Postgres schema, RLS policies, indexes                                 |
+| 05  | [Architecture](docs/05-architecture.md)     | Stack, structure, offline/sync, jobs, environments                     |
+| 06  | [Design System](docs/06-design-system.md)   | Mobile-first layout, tokens, components, accessibility                 |
+| 07  | [Integrations](docs/07-integrations.md)     | Strava, Garmin, Apple Health / Health Connect                          |
+| 08  | [API Contracts](docs/08-api.md)             | Route handlers, payloads, errors                                       |
+| 09  | [Roadmap](docs/09-roadmap.md)               | Phases, milestones, exit criteria                                      |
+| 10  | [Glossary](docs/10-glossary.md)             | Every piece of triathlon jargon, in plain English                      |
+| —   | [ADRs](docs/adr/)                           | Architecture decision records                                          |
 
 Conventions for anyone (human or agent) writing code here: [CLAUDE.md](CLAUDE.md).
 

@@ -25,11 +25,13 @@ Offline-first, not offline-tolerant. Specifically:
 ## Consequences
 
 **Good**
+
 - The app works in a pool, a basement, and at a race start.
 - The UI is instant, because it never waits for a round trip.
 - Duplicate delivery — from retries, double taps, or a flaky connection — is harmless.
 
 **Bad**
+
 - Significant complexity: every mutation path needs an offline story, and "just call the API" is never the answer.
 - Cache invalidation becomes a real design problem rather than an afterthought.
 - Testing is harder; offline scenarios must be in the e2e suite or they will regress.
@@ -38,12 +40,12 @@ Offline-first, not offline-tolerant. Specifically:
 
 ## Alternatives considered
 
-| Option | Why not |
-|---|---|
-| **Online-only with a friendly error** | Fails at exactly the moments the app exists for. Non-starter. |
-| **Offline reads, online writes** | Half a solution. The write is the part that hurts to lose. |
+| Option                                                 | Why not                                                                                                                                                                                                |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Online-only with a friendly error**                  | Fails at exactly the moments the app exists for. Non-starter.                                                                                                                                          |
+| **Offline reads, online writes**                       | Half a solution. The write is the part that hurts to lose.                                                                                                                                             |
 | **A sync framework (RxDB, WatermelonDB, ElectricSQL)** | Powerful, but heavy for our bundle budget and opinionated in ways that fight Supabase. Our mutation set is small and well-understood; hand-rolling the outbox is a few hundred lines we fully control. |
-| **CRDTs** | Correct in general, over-engineered here. Conflicts are rare (one user, one device at a time in practice) and the per-type rules above resolve them unambiguously. |
+| **CRDTs**                                              | Correct in general, over-engineered here. Conflicts are rare (one user, one device at a time in practice) and the per-type rules above resolve them unambiguously.                                     |
 
 ## Revisit if
 

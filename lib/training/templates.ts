@@ -78,7 +78,12 @@ function steady(total: number, mainZone: Zone, mainCue: string): Step[] {
   return [
     { label: 'Warm-up', durationSec: warmUp, zone: 1, cue: 'Ease into it' },
     { label: 'Main set', durationSec: main, zone: mainZone, cue: mainCue },
-    { label: 'Cool-down', durationSec: coolDown, zone: 1, cue: 'Easy — let the heart rate come down' },
+    {
+      label: 'Cool-down',
+      durationSec: coolDown,
+      zone: 1,
+      cue: 'Easy — let the heart rate come down',
+    },
   ];
 }
 
@@ -238,8 +243,7 @@ export const TEMPLATES = {
     zone: 2,
     tags: ['key'],
     minSeconds: 30 * 60,
-    build: (total) =>
-      steady(total, 2, 'Steady. Drink every 15 minutes, eat something every 45.'),
+    build: (total) => steady(total, 2, 'Steady. Drink every 15 minutes, eat something every 45.'),
   },
 
   'bike.tempo': {
@@ -302,7 +306,8 @@ export const TEMPLATES = {
     zone: 2,
     tags: ['key'],
     minSeconds: 25 * 60,
-    build: (total) => steady(total, 2, 'Steady and easy the whole way. Start slower than feels right.'),
+    build: (total) =>
+      steady(total, 2, 'Steady and easy the whole way. Start slower than feels right.'),
   },
 
   'run.intervals': {
@@ -342,7 +347,10 @@ export const TEMPLATES = {
       const idealBike = Math.round((usable * 0.66) / 60) * 60;
       const bike = Math.max(120, Math.min(idealBike, usable - 120));
       const run = usable - bike;
-      const bikeWarm = Math.max(60, Math.min(600, Math.min(Math.floor((bike * 0.35) / 60) * 60, bike - 60)));
+      const bikeWarm = Math.max(
+        60,
+        Math.min(600, Math.min(Math.floor((bike * 0.35) / 60) * 60, bike - 60)),
+      );
       return [
         { label: 'Bike warm-up', durationSec: bikeWarm, zone: 1, cue: 'Spin easy' },
         { label: 'Bike main', durationSec: bike - bikeWarm, zone: 3, cue: 'Steady race effort' },
