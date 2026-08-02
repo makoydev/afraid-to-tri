@@ -97,6 +97,37 @@ async function asUser<T>(client: Client, userId: string, work: () => Promise<T>)
   }
 }
 
+/**
+ * This suite DROPS AND RECREATES the public schema. Pointed at a real project
+ * it would destroy every athlete's data, so it refuses to run anywhere that
+ * is not obviously a throwaway database.
+ */
+function assertDatabaseIsDisposable(connectionString: string): void {
+  let host: string;
+  try {
+    host = new URL(connectionString).hostname;
+  } catch {
+    throw new Error(`DATABASE_URL is not a valid connection string: ${connectionString}`);
+  }
+
+  const localHosts = new Set(['localhost', '127.0.0.1', '::1', 'postgres', 'db']);
+  if (localHosts.has(host)) return;
+
+  // A deliberate, explicit override for CI images that use a different host.
+  if (process.env.RLS_I_UNDERSTAND_THIS_DROPS_THE_SCHEMA === 'yes') {
+    console.warn(`WARNING: running destructively against non-local host "${host}".`);
+    return;
+  }
+
+  throw new Error(
+    `Refusing to run: "${host}" does not look like a throwaway database.\n\n` +
+      'This suite drops and recreates the public schema. Never point it at a\n' +
+      'Supabase project or any database with real data.\n\n' +
+      'Use a local Postgres 16+, or set RLS_I_UNDERSTAND_THIS_DROPS_THE_SCHEMA=yes\n' +
+      'if you are certain the target is disposable.',
+  );
+}
+
 async function main(): Promise<void> {
   if (!DATABASE_URL) {
     console.log(
@@ -107,6 +138,8 @@ async function main(): Promise<void> {
     );
     process.exit(0);
   }
+
+  assertDatabaseIsDisposable(DATABASE_URL);
 
   const admin = new Client({ connectionString: DATABASE_URL });
   await admin.connect();

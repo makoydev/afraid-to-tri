@@ -15,7 +15,8 @@ Nothing user-visible. The point is that everything after this is fast.
 - [x] **The training domain** (`lib/training/`) — brought forward from Milestone 1.1 because it is the
       highest-risk piece and has no UI dependencies. Zones, load model, calendar, safety rails,
       workout templates, plan generator. 199 tests including property tests.
-- [ ] Supabase project provisioned; migrations applied to a real environment
+- [x] Supabase project provisioned (Postgres 17, ap-northeast-2); both migrations applied and tracked
+- [x] Validated env layer (`lib/env.ts`) and the three Supabase clients (browser / server / admin)
 - [ ] Auth (magic link + Apple + Google), including the anonymous → account upgrade path
 - [ ] Sentry, structured logging, error boundaries
 
