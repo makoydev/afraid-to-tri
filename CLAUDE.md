@@ -4,7 +4,18 @@ Conventions for anyone — human or agent — writing code here. Read [docs/](do
 
 ## Current state
 
-Documentation phase. No application code yet. The docs in `docs/` are the specification the build follows — if you're about to write code that contradicts them, update the doc in the same commit, or don't write the code.
+Phase 0. The docs in `docs/` are the specification the build follows — if you're about to write code that contradicts them, update the doc in the same commit, or don't write the code.
+
+Built and tested: the training domain (`lib/training/`), the database schema and RLS policies, the UI primitives, and CI. Not built yet: auth, any application screens, and observability. See [docs/09-roadmap.md](docs/09-roadmap.md) for exactly what remains in Phase 0.
+
+Useful commands:
+
+```bash
+pnpm verify     # typecheck + lint + unit tests — run this before every commit
+pnpm test:cov   # unit tests with the lib/training coverage thresholds enforced
+pnpm test:rls   # data-isolation suite; needs DATABASE_URL pointing at a throwaway Postgres 16+
+pnpm build && node scripts/check-bundle-budget.mjs   # performance budget
+```
 
 ## Non-negotiables
 

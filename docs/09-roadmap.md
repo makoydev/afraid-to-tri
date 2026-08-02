@@ -8,15 +8,22 @@ Phases are sequential and gated: a phase doesn't start until the previous one's 
 
 Nothing user-visible. The point is that everything after this is fast.
 
-- [ ] Next.js 15 + TypeScript strict + Tailwind, with the token layer from [06](06-design-system.md) wired into `theme.extend`
-- [ ] Supabase project, local dev via CLI, migration workflow
+- [x] Next.js 15 + TypeScript strict + Tailwind, with the token layer from [06](06-design-system.md) wired in
+- [x] Core schema + RLS policies + the `tests/rls/` suite — 23 assertions, verified against Postgres 16
+- [x] `components/ui/` primitives: Button, Card, Sheet, Chip, StatTile, EmptyState
+- [x] CI: format, typecheck, lint, unit + coverage thresholds, RLS, build, bundle budget
+- [x] **The training domain** (`lib/training/`) — brought forward from Milestone 1.1 because it is the
+      highest-risk piece and has no UI dependencies. Zones, load model, calendar, safety rails,
+      workout templates, plan generator. 199 tests including property tests.
+- [ ] Supabase project provisioned; migrations applied to a real environment
 - [ ] Auth (magic link + Apple + Google), including the anonymous → account upgrade path
-- [ ] Core schema + RLS policies + the `tests/rls/` suite
-- [ ] `components/ui/` primitives: Button, Card, Sheet, Chip, StatTile, EmptyState
-- [ ] CI: typecheck, lint, unit, RLS, build, Lighthouse budget
 - [ ] Sentry, structured logging, error boundaries
 
 **Exit:** a signed-in user reaches an empty Today screen; a second user provably cannot read their rows; CI is green and enforcing the performance budget.
+
+> **Status:** the second exit condition is met and mechanically proven; the third is met. The first
+> is not — there is no auth yet, so Phase 0 is not complete. Auth, a provisioned Supabase project,
+> and observability are what remain.
 
 ---
 
