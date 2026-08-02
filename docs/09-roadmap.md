@@ -46,7 +46,7 @@ Everything needed for someone to go from "I might do a triathlon" to crossing a 
 ### Milestone 1.4 — Live workout & offline (~2 wk)
 - [ ] Full-screen guided session, audio cues, wake lock ([F-07](01-product-spec.md#f-07--live-guided-workout--p0))
 - [ ] Crash recovery + checkpointing
-- [ ] Service worker, precache tiers, outbox, background sync ([F-13](01-product-spec.md#f-13--pwa--offline--p0))
+- [ ] Service worker, precache tiers, outbox, background sync ([F-13](01-product-spec.md#f-13--pwa--offline--p0-user-prioritized))
 - [ ] Playwright offline e2e: log a session in flight mode, reconnect, assert exactly one row
 
 *The riskiest UI work. Budget for it to overrun.*
