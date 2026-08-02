@@ -4,8 +4,24 @@ A mobile-first triathlon training app for people who want to do a triathlon but 
 
 Most training apps assume you already know what a brick is, what your FTP is, and why anyone would swim in a lake on purpose. **Afraid to Tri** assumes you don't — and gets you to a finish line anyway. It builds you a plan around a real race date, tells you exactly what to do today, walks you through the session with big buttons and audio cues, and adapts when life gets in the way.
 
-> **Status:** Documentation phase. No application code yet.
-> This repo currently contains the product, design, and technical specification that the build will follow.
+> **Status:** Documentation phase. No production application code yet.
+> This repo contains the product, design, and technical specification that the build will follow — plus a working prototype of the core screens.
+
+## 📱 Try the prototype
+
+**[makoydev.github.io/afraid-to-tri/prototype](https://makoydev.github.io/afraid-to-tri/prototype/)** — open it on your phone.
+
+A single self-contained HTML file that runs the real algorithms from the spec: the plan generator, the load model, zone logic, adaptation rules, and the live-workout timer with spoken cues. No account, no server, no network — state lives in your browser.
+
+What you can actually do in it:
+
+- **Open the demo athlete** — six weeks into a 14-week sprint plan, with history, so every screen has real data in it
+- **Or build your own plan** — pick a distance and date, and watch it refuse politely if the runway is too short
+- **Start a session** — full-screen guided workout with countdown ring, step progression, and audio cues (turn your volume up)
+- **Log it** — one-tap effort rating, then watch the plan adapt and tell you what it changed
+- **Race toolkit** — countdown, generated gear checklist, pacing plan, and the "what actually happens on the day" walkthrough
+
+Not in the prototype: accounts, Strava sync, offline service worker, push notifications, and the coach features. Those need the real stack.
 
 ---
 
