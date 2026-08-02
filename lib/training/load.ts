@@ -1,5 +1,5 @@
 import { addDays, daysBetween, eachDay } from './calendar';
-import type { DailyMetric, Discipline, IsoDate, Rpe } from './types';
+import type { DailyMetric, Discipline, IsoDate, Rpe, Step, Zone } from './types';
 
 /**
  * The load model.
@@ -41,6 +41,18 @@ export const RPE_INTENSITY_RATIO: Readonly<Record<Rpe, number>> = {
   8: 0.96,
   9: 1.02,
   10: 1.08,
+} as const;
+
+/**
+ * The intensity a *planned* session is expected to be ridden at, per zone.
+ * Used to cost a plan before any of it has been done.
+ */
+export const ZONE_INTENSITY_RATIO: Readonly<Record<Zone, number>> = {
+  1: 0.55,
+  2: 0.68,
+  3: 0.84,
+  4: 0.95,
+  5: 1.05,
 } as const;
 
 const HR_RATIO_MIN = 0.5;
@@ -116,6 +128,26 @@ export function sessionLoad(input: SessionLoadInput): number {
   }
   const hours = durationSec / 3600;
   return hours * ir * ir * LOAD_CALIBRATION * DISCIPLINE_MULTIPLIER[discipline];
+}
+
+/** What a planned session is expected to cost, summed over its steps. */
+export function plannedLoad(steps: readonly Step[], discipline: Discipline): number {
+  return steps.reduce((total, step) => {
+    const repeats = step.repeats ?? 1;
+    const work = sessionLoad({
+      durationSec: step.durationSec * repeats,
+      intensityRatio: ZONE_INTENSITY_RATIO[step.zone],
+      discipline,
+    });
+    const recovery = step.recovery
+      ? sessionLoad({
+          durationSec: step.recovery.durationSec * Math.max(0, repeats - 1),
+          intensityRatio: ZONE_INTENSITY_RATIO[step.recovery.zone],
+          discipline,
+        })
+      : 0;
+    return total + work + recovery;
+  }, 0);
 }
 
 /* ------------------------------------------------------ fitness and fatigue */

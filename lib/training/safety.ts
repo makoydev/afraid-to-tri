@@ -104,7 +104,10 @@ function groupSessionsByWeek(plan: Plan): Map<number, Session[]> {
 /* -------------------------------------------------------------------- rails */
 
 function checkRamp(plan: Plan, out: SafetyViolation[]): void {
-  const { weeks } = plan;
+  // Weeks with no training at all are time off (a blackout, a holiday), not
+  // training weeks. Comparing against a zero week produces meaningless ratios,
+  // so the ramp is measured across the weeks that actually contain training.
+  const weeks = plan.weeks.filter((w) => w.targetLoad > 0);
 
   for (let i = 1; i < weeks.length; i++) {
     const prev = weeks[i - 1]!;
@@ -122,25 +125,32 @@ function checkRamp(plan: Plan, out: SafetyViolation[]): void {
     }
   }
 
-  for (let i = 4; i < weeks.length; i++) {
-    const base = weeks[i - 4]!;
-    const cur = weeks[i]!;
-    if (base.targetLoad <= 0 || cur.isRecovery) continue;
-    const growth = cur.targetLoad / base.targetLoad - 1;
+  // Rolling four-week growth compares block TOTALS, not single weeks. Comparing
+  // individual weeks reads a recovery week as a spike in the block that follows
+  // it, which is the plan working rather than a problem.
+  const sumLoad = (from: number, to: number) =>
+    weeks.slice(from, to).reduce((total, w) => total + w.targetLoad, 0);
+
+  for (let i = 7; i < weeks.length; i++) {
+    const recent = sumLoad(i - 3, i + 1);
+    const earlier = sumLoad(i - 7, i - 3);
+    if (earlier <= 0) continue;
+    const growth = recent / earlier - 1;
     if (growth > SAFETY_LIMITS.rollingFourWeekCap + 1e-9) {
       out.push({
         code: 'RAMP_TOO_STEEP_ROLLING',
-        weekIndex: cur.index,
-        message: `Week ${String(cur.index + 1)} is ${(growth * 100).toFixed(1)}% above four weeks earlier, over the ${String(SAFETY_LIMITS.rollingFourWeekCap * 100)}% rolling cap.`,
+        weekIndex: weeks[i]!.index,
+        message: `The four training weeks ending at week ${String(weeks[i]!.index + 1)} are ${(growth * 100).toFixed(1)}% heavier than the four before them, over the ${String(SAFETY_LIMITS.rollingFourWeekCap * 100)}% rolling cap.`,
       });
     }
   }
 }
 
 function checkRecoveryWeeks(plan: Plan, out: SafetyViolation[]): void {
-  plan.weeks.forEach((week, i) => {
+  const weeks = plan.weeks.filter((w) => w.targetLoad > 0);
+  weeks.forEach((week, i) => {
     if (!week.isRecovery || i === 0) return;
-    const prev = plan.weeks[i - 1]!;
+    const prev = weeks[i - 1]!;
     if (prev.targetLoad <= 0) return;
     const reduction = 1 - week.targetLoad / prev.targetLoad;
     if (reduction < SAFETY_LIMITS.recoveryMinReduction - 1e-9) {
@@ -258,7 +268,9 @@ function checkLongRunRamp(plan: Plan, out: SafetyViolation[]): void {
 
     const prev = longestRunByWeek.get(prevIndex)!;
     const cur = longestRunByWeek.get(curIndex)!;
-    if (plan.weeks[curIndex]?.isRecovery) continue;
+    // Same exemption as the load ramp: a recovery week is deliberately short,
+    // and returning to normal afterwards is the plan working, not a jump.
+    if (plan.weeks[curIndex]?.isRecovery || plan.weeks[prevIndex]?.isRecovery) continue;
 
     const growth = cur.plannedSeconds / prev.plannedSeconds - 1;
     if (growth > SAFETY_LIMITS.longRunRampCap + 1e-9) {

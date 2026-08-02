@@ -39,6 +39,14 @@ export default tseslint.config(
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
+      /*
+       * `noUncheckedIndexedAccess` is on in tsconfig, which makes every array
+       * index `T | undefined`. Inside a bounded loop that is provably wrong, so
+       * the assertion is the honest expression of what the compiler cannot see.
+       * Banning it here would push people to disable the far more valuable
+       * compiler flag instead.
+       */
+      '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       '@typescript-eslint/no-unused-vars': [
         'error',

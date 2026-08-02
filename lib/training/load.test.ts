@@ -7,6 +7,8 @@ import {
   sessionLoad,
   fitnessFatigueSeries,
   freshnessBand,
+  plannedLoad,
+  ZONE_INTENSITY_RATIO,
   FITNESS_TIME_CONSTANT,
   FATIGUE_TIME_CONSTANT,
 } from './load';
@@ -120,6 +122,58 @@ describe('RPE_INTENSITY_RATIO', () => {
   it('puts RPE 9 at roughly threshold', () => {
     expect(RPE_INTENSITY_RATIO[9]).toBeGreaterThan(0.98);
     expect(RPE_INTENSITY_RATIO[9]).toBeLessThan(1.06);
+  });
+});
+
+describe('plannedLoad', () => {
+  it('costs a flat session the same as sessionLoad would', () => {
+    const steps = [{ label: 'Main', durationSec: 3600, zone: 2 as const, cue: 'Easy' }];
+    expect(plannedLoad(steps, 'bike')).toBeCloseTo(
+      sessionLoad({ durationSec: 3600, intensityRatio: ZONE_INTENSITY_RATIO[2], discipline: 'bike' }),
+      6,
+    );
+  });
+
+  it('counts repeats and the recoveries between them', () => {
+    const steps = [
+      {
+        label: 'Main',
+        durationSec: 300,
+        zone: 4 as const,
+        cue: 'Hard',
+        repeats: 4,
+        recovery: { durationSec: 120, zone: 1 as const, cue: 'Easy' },
+      },
+    ];
+    const work = sessionLoad({
+      durationSec: 300 * 4,
+      intensityRatio: ZONE_INTENSITY_RATIO[4],
+      discipline: 'bike',
+    });
+    const rest = sessionLoad({
+      durationSec: 120 * 3,
+      intensityRatio: ZONE_INTENSITY_RATIO[1],
+      discipline: 'bike',
+    });
+    expect(plannedLoad(steps, 'bike')).toBeCloseTo(work + rest, 6);
+  });
+
+  it('costs a hard session more than an easy one of the same length', () => {
+    const easy = [{ label: 'M', durationSec: 3600, zone: 2 as const, cue: 'c' }];
+    const hard = [{ label: 'M', durationSec: 3600, zone: 4 as const, cue: 'c' }];
+    expect(plannedLoad(hard, 'run')).toBeGreaterThan(plannedLoad(easy, 'run'));
+  });
+
+  it('is zero for a session with no steps', () => {
+    expect(plannedLoad([], 'run')).toBe(0);
+  });
+});
+
+describe('ZONE_INTENSITY_RATIO', () => {
+  it('increases with zone and puts zone 4 near threshold', () => {
+    expect(ZONE_INTENSITY_RATIO[1]).toBeLessThan(ZONE_INTENSITY_RATIO[2]);
+    expect(ZONE_INTENSITY_RATIO[4]).toBeGreaterThan(0.9);
+    expect(ZONE_INTENSITY_RATIO[5]).toBeGreaterThan(1);
   });
 });
 

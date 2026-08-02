@@ -26,12 +26,12 @@ describe('toIsoDate / parseIsoDate', () => {
   });
 
   it('rejects a malformed date string', () => {
-    expect(() => parseIsoDate('2026-3-1' as IsoDate)).toThrow(/YYYY-MM-DD/);
-    expect(() => parseIsoDate('not-a-date' as IsoDate)).toThrow();
+    expect(() => parseIsoDate('2026-3-1')).toThrow(/YYYY-MM-DD/);
+    expect(() => parseIsoDate('not-a-date')).toThrow();
   });
 
   it('rejects a date that does not exist', () => {
-    expect(() => parseIsoDate('2026-02-30' as IsoDate)).toThrow(/not a real date/i);
+    expect(() => parseIsoDate('2026-02-30')).toThrow(/not a real date/i);
   });
 
   it('round-trips every day across a leap year', () => {

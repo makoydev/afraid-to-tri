@@ -26,18 +26,53 @@ describe('validatePlan — ramp rate', () => {
     expect(codes(plan)).not.toContain('RAMP_TOO_STEEP');
   });
 
-  it('rejects more than 30% growth across a rolling four weeks', () => {
-    // Each step is under 10% but the four-week total is not.
+  it('rejects more than 30% growth between consecutive four-week blocks', () => {
+    // Compares block totals: weeks 4-7 against weeks 0-3.
     const plan = makePlan({
       weeks: [
         { targetLoad: 200 },
-        { targetLoad: 219 },
-        { targetLoad: 240 },
-        { targetLoad: 263 },
-        { targetLoad: 288 },
+        { targetLoad: 200 },
+        { targetLoad: 200 },
+        { targetLoad: 200 },
+        { targetLoad: 300 },
+        { targetLoad: 300 },
+        { targetLoad: 300 },
+        { targetLoad: 300 },
       ],
     });
     expect(codes(plan)).toContain('RAMP_TOO_STEEP_ROLLING');
+  });
+
+  it('accepts a 20% block-over-block increase', () => {
+    const plan = makePlan({
+      weeks: [
+        { targetLoad: 200 },
+        { targetLoad: 200 },
+        { targetLoad: 200 },
+        { targetLoad: 200 },
+        { targetLoad: 240 },
+        { targetLoad: 240 },
+        { targetLoad: 240 },
+        { targetLoad: 240 },
+      ],
+    });
+    expect(codes(plan)).not.toContain('RAMP_TOO_STEEP_ROLLING');
+  });
+
+  it('does not read a recovery week as a spike in the following block', () => {
+    const plan = makePlan({
+      weeks: [
+        { targetLoad: 200 },
+        { targetLoad: 210 },
+        { targetLoad: 220 },
+        { targetLoad: 130, isRecovery: true },
+        { targetLoad: 230 },
+        { targetLoad: 240 },
+        { targetLoad: 250 },
+        { targetLoad: 150, isRecovery: true },
+      ],
+    });
+    expect(codes(plan)).not.toContain('RAMP_TOO_STEEP_ROLLING');
   });
 });
 
@@ -169,6 +204,18 @@ describe('validatePlan — run volume', () => {
       ],
     });
     expect(codes(plan)).toContain('LONG_RUN_RAMP_TOO_STEEP');
+  });
+
+  it('allows the long run to return to normal after a recovery week', () => {
+    const plan = makePlan({
+      weeks: [{}, { isRecovery: true, targetLoad: 120 }, { targetLoad: 200 }],
+      sessions: [
+        { id: 'r1', date: iso('2026-08-08'), discipline: 'run', plannedSeconds: 3600, weekIndex: 0 },
+        { id: 'r2', date: iso('2026-08-15'), discipline: 'run', plannedSeconds: 2400, weekIndex: 1 },
+        { id: 'r3', date: iso('2026-08-22'), discipline: 'run', plannedSeconds: 3700, weekIndex: 2 },
+      ],
+    });
+    expect(codes(plan)).not.toContain('LONG_RUN_RAMP_TOO_STEEP');
   });
 
   it('accepts a 10% increase', () => {
