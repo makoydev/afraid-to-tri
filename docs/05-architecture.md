@@ -174,8 +174,8 @@ The nightly job is **idempotent and resumable** — it processes users in batche
 
 ## Security
 
-- **RLS everywhere**; the anon key is the only key that reaches the browser.
-- Service-role key used only in route handlers, never in a Client Component, enforced by a lint rule banning the import outside `lib/supabase/admin.ts`.
+- **RLS everywhere**; the publishable key is the only key that reaches the browser.
+- The secret key is used only in route handlers, never in a Client Component. `lib/supabase/admin.ts` imports `server-only`, which turns a stray client import into a build error, and all environment access goes through `lib/env.ts` (lint-enforced).
 - Integration tokens encrypted at rest (Supabase Vault) and never returned to the client.
 - Webhooks verify provider signatures (Strava verify token, Garmin signature) and are rate-limited.
 - CSP with no `unsafe-inline`; strict `frame-ancestors`.
@@ -213,8 +213,8 @@ Techniques: RSC by default, route-level code splitting, `next/font` with subsett
 
 ```
 NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY        # server only
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY   # sb_publishable_… — public by design, RLS protects it
+SUPABASE_SECRET_KEY                    # sb_secret_… — server only, BYPASSES RLS
 STRAVA_CLIENT_ID / STRAVA_CLIENT_SECRET / STRAVA_WEBHOOK_VERIFY_TOKEN
 GARMIN_CONSUMER_KEY / GARMIN_CONSUMER_SECRET
 VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY      # web push

@@ -121,7 +121,9 @@ export default tseslint.config(
      ========================================================================== */
   {
     files: ['**/*.ts', '**/*.tsx'],
-    ignores: ['lib/supabase/admin.ts', 'tests/**'],
+    // lib/env.ts is the one module allowed to read process.env — it is what the
+    // rule below points everyone at, so it must be exempt from it.
+    ignores: ['lib/env.ts', 'tests/**'],
     rules: {
       'no-restricted-properties': [
         'error',
@@ -171,6 +173,8 @@ export default tseslint.config(
       '@typescript-eslint/no-non-null-assertion': 'off',
       'no-restricted-syntax': 'off',
       'no-restricted-imports': 'off',
+      // Env tests must be able to manipulate process.env directly.
+      'no-restricted-properties': 'off',
       'no-console': 'off',
     },
   },
